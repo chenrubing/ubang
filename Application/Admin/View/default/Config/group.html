@@ -1,0 +1,116 @@
+<extend name="Public/base"/>
+<block name="body">
+  <div class="main-title">
+    <h2>网站设置</h2>
+  </div>
+  <div class="tab-wrap with-padding">
+    <ul class="nav nav-secondary">
+      <volist name="Think.config.CONFIG_GROUP_LIST" id="group"> <li  
+        <eq name="id" value="$key">class="active"</eq>
+        ><a href="{:U('?id='.$key)}">{$group}配置</a>
+        </li>
+      </volist>
+    </ul>
+  </div>
+  
+  <div class="tab-content with-padding">
+  <form action="{:U('save')}" method="post" class="form-horizontal">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered">
+      <volist name="list" id="config">
+        <tr>
+          <td width="19%">{$config.title}</td>
+          <td width="81%"><switch name="config.type">
+              <case value="0">
+                <input type="text" class="text input-1 form-control" name="config[{$config.name}]" value="{$config.value}">
+              </case>
+              <case value="1">
+                <input type="text" class="text input-3 form-control" name="config[{$config.name}]" value="{$config.value}">
+              </case>
+              <case value="2">
+                <label class="textarea input-large">
+                  <textarea name="config[{$config.name}]" class="form-control input-5" >{$config.value}</textarea>
+                </label>
+              </case>
+              <case value="3">
+                <label class="textarea input-large">
+                  <textarea name="config[{$config.name}]" class="form-control input-3">{$config.value}</textarea>
+                </label>
+              </case>
+              <case value="4">
+                <select name="config[{$config.name}]" class="form-control" style="width: auto">
+                  <volist name=":parse_config_attr($config['extra'])" id="vo"> 
+                  <option value="{$key}" <eq name="config.value" value="$key">selected</eq>  >{$vo} </option>
+                  </volist>
+                </select>
+              </case>
+              <case value="5"><!--增加富文本和非明文--> 
+                
+                {:W('Common/Ueditor/editor',array($config['name'],'config['.$config['name'].']',$config['value'],'85%','300px'))} </case>
+              <case value="6">
+                <input type="password" class="text input-3 form-control"  name="config[{$config.name}]" autoComplete="off" value="{$config.value}">
+              </case>
+              <case value="7"> 
+              
+                 <div class="controls">
+                 <div data-toggle="upimg" name="config[{$config.name}]" title="请上传图片" maxnum="1" value="{$config[value]}" id="Logo" src="{$config[value]|get_cover='path'}"></div>  </div>
+               
+              </case>
+              <case value="8">
+                <php> $config['value_array'] = explode(',', $config['value']);
+                  $config['extra'] = explode("\r\n", $config['extra']);
+                  $config['opt'] = array();
+                  foreach( $config['extra'] as &$val){
+                  $val =  explode(':', $val);
+                  $config['opt'][$val[0]] =  $val[1];
+                  } </php>
+                <volist name="config.opt" id="option">
+                  <php> $checked = in_array($key,$config['value_array']) ? 'checked' : '';
+                    $inputId = "id_$config[name]_$key"; </php>
+                  <label for="{$inputId}"> <input type="checkbox" value="{$key}" id="{$inputId}" class="oneplus-checkbox" data-field-name="{$config.name}" {$checked}/>
+                    {$option|htmlspecialchars}</label>
+                </volist>
+                <input type="hidden" name="config[{$config.name}]" class="oneplus-checkbox-hidden"  data-field-name="{$config.name}" value="{$config.value}"/>
+                <script>
+                                        $(function () {
+                                            function implode(x, list) {
+                                                var result = "";
+                                                for (var i = 0; i < list.length; i++) {
+                                                    if (result == "") {
+                                                        result += list[i];
+                                                    } else {
+                                                        result += ',' + list[i];
+                                                    }
+                                                }
+                                                return result;
+                                            }
+
+                                            $('.oneplus-checkbox').change(function (e) {
+                                                var fieldName = $(this).attr('data-field-name');
+                                                var checked = $('.oneplus-checkbox[data-field-name=' + fieldName + ']:checked');
+                                                var result = [];
+                                                for (var i = 0; i < checked.length; i++) {
+                                                    var checkbox = $(checked.get(i));
+                                                    result.push(checkbox.attr('value'));
+                                                }
+                                                result = implode(',', result);
+                                                $('.oneplus-checkbox-hidden[data-field-name=' + fieldName + ']').val(result);
+                                            });
+                                        })
+                                    </script> 
+              </case>
+            </switch>
+          <if condition="$config[remark]">  <span class="check-tips">({$config.remark})</span> </if></td>
+        </tr>
+      </volist>
+    </table>
+  <div class="buttons">
+    <empty name="list">
+      <button type="submit" disabled class="btn btn-primary submit-btn disabled" target-form="form-horizontal">确 定 </button>
+      <else/>
+      <button type="submit" class="btn btn-primary submit-btn ajax-post" target-form="form-horizontal">确 定 </button>
+    </empty>
+    <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>    </div>
+</block>
+<block name="script"> </block>

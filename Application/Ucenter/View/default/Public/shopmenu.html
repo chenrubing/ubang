@@ -1,0 +1,19 @@
+
+<div>
+<php>$shopmenu = D('Smallshop')->where($map)->find(); </php>
+<ul class="am-list am-list-border am-list-static MyShopMenu">
+<li><span class="am-icon-chevron-right"></span><a href="{:U('ucenter/myshop/index',array('site'=>get_site()))}"><i class="am-icon-bars"></i>微店信息总览</a></li>
+<li><span class="am-icon-chevron-right"></span><a href="{:U('ucenter/myshop/config',array('site'=>get_site()))}"><i class="am-icon-cog"></i>微店设置</a></li>
+<if condition="$shopmenu[status]">
+<li><span class="am-icon-chevron-right"></span><a href="{:U('ucenter/myshop/member',array('site'=>get_site()))}"><i class="am-icon-users"></i>代理用户</a></li>
+<li><span class="am-icon-chevron-right"></span><a href="{:U('ucenter/myshop/memberorder',array('site'=>get_site()))}"><i class="am-icon-shopping-cart"></i>代理订单</a></li>
+<li><span class="am-icon-chevron-right"></span><a href="{:U('ucenter/myshop/money',array('site'=>get_site()))}"><i class="am-icon-cny"></i>佣金提现</a></li>
+<li><span class="am-icon-chevron-right" ></span><a href="{:U('Ucenter/member/register',array('site'=>get_site(),'isred'=>red))}"><i class="am-icon-link"></i>红包推广</a>
+</li>
+</if>
+</ul>
+</div>
+
+
+       
+

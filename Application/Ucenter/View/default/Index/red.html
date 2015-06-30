@@ -1,0 +1,40 @@
+<extend name="Base/common"/>
+<block name="body">
+<div class="am-btn-group am-btn-group-justify goodsbtns" data-am-sticky>
+ <a href="{:U('red')}"  class="am-btn am-btn-<empty name='_GET[status]'>success<else/>primary</empty>">全部</a>
+ <a href="{:U('red',array('status'=>'1'))}"  class="am-btn am-btn-<eq name='_GET[status]' value='1'>success<else/>primary</eq>">未使用</a>
+ <a href="{:U('red',array('status'=>'2'))}"  class="am-btn am-btn-<eq name='_GET[status]' value='2'>success<else/>primary</eq>">已使用</a>
+ <a href="{:U('red',array('status'=>'-1'))}"  class="am-btn am-btn-<eq name='_GET[status]' value='-1'>success<else/>primary</eq>">已过期</a>
+ </div>
+ 
+  <div class="am-container">
+     <empty name="list">
+      <div class="am-alert am-alert-danger am-margin-top" data-am-alert> 还没有红包 </div>
+    </empty>
+</div>
+  <!--内容开始-->
+  <div data-am-widget="list_news" class="am-list-news am-list-news-default">
+    <volist name="list" id="vl">
+      <div class="am-alert  <eq name="vl.status" value="1">am-alert-danger</eq> <eq name="vl.status" value="2">am-alert-success</eq>  <eq name="vl.status" value="-1">am-alert-secondary</eq>  " data-am-alert>
+        <table width="100%">
+          <tr>
+            <td width="52%"><span class="am-icon-cny am-text-xxxl">{$vl.money}</span></td>
+            <td width="48%" rowspan="2" class="am-text-sm"><div style=" border-left:1px solid #fff; padding-left:10px">过期时间：<br />
+                {$vl.overtime|date="Y-m-d H:i",###}<br />
+                状态：
+                <eq name="vl.status" value="-1">已过期</eq>
+                <eq name="vl.status" value="1">未使用</eq>
+                <eq name="vl.status" value="2">已使用</eq>
+              </div></td>
+          </tr>
+          <tr>
+            <td width="52%" class="am-text-sm">发放者：{:get_nickname($vl[formuid])}</td>
+          </tr>
+        </table>
+      </div>
+    </volist>
+</div>
+  {:getPagination($totalCount,15)} 
+  <!--内容结束--> 
+  
+</block>

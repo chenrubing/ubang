@@ -1,0 +1,45 @@
+
+  <div class="DialogBox">
+      <form id="form" action="{:U('update')}" method="post" class="form-horizontal">
+        <table width="100%" border="0" cellspacing="0" class="table table-condensed">
+          <tr>
+            <td width="22%">模型标识</td>
+            <td width="78%"><input type="text" class="text input-large" name="name" value="">
+              <span class="check-tips">（请输入文档模型标识）</span></td>
+          </tr>
+          <tr>
+            <td>模型名称</td>
+            <td><input type="text" class="text input-large" name="title" value="">
+              <span class="check-tips">（请输入模型的名称）</span></td>
+          </tr>
+          <tr>
+            <td>模型类型</td>
+            <td><select name="extend">
+                <option value="0">独立模型</option>
+                <option value="1">文档模型</option>
+              </select>
+              <span class="check-tips">（目前支持独立模型和文档模型）</span></td>
+          </tr>
+          <tr>
+            <td>引擎类型</td>
+            <td><select name="engine_type">
+                <option value="MyISAM">MyISAM</option>
+                <option value="InnoDB">InnoDB</option>
+                <option value="MEMORY">MEMORY</option>
+                <option value="BLACKHOLE">BLACKHOLE</option>
+                <option value="MRG_MYISAM">MRG_MYISAM</option>
+                <option value="ARCHIVE">ARCHIVE</option>
+              </select></td>
+          </tr>
+          <tr>
+            <td>是否需要主键</td>
+            <td><select name="need_pk">
+                <option value="1" selected="selected">是</option>
+                <option value="0">否</option>
+              </select>
+              <span class="check-tips">（选"是"则会新建默认的id字段作为主键）</span></td>
+          </tr>
+        </table>
+      </form>
+  </div>
+<div class="modal-ajax-footer"><button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确定</button></div>

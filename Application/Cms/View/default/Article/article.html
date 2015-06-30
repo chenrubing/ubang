@@ -1,0 +1,14 @@
+<extend name="Base/common"/>
+<block name="body">
+<div class="am-container am-margin-top">
+<article class="am-article">
+  <div class="am-article-hd">
+    <h1 class="am-article-title" style="border-bottom:1px solid #eee; padding-bottom:20px">{$list.title}</h1>
+    <p class="am-article-meta am-text-right">{:C('WEB_SITE')}&nbsp; {$list.create_time|date="Y-m-d H:i",###} &nbsp;<i class="am-icon-eye"></i> &nbsp;{$list.view}次浏览</p>
+  </div>
+  <div class="am-article-bd">
+    <p class="am-article-lead">导读：{$list.description}</p>
+    <div class="am-margin-top cms_content"> {$list.content}</div>
+  </div>
+</article></div>
+</block>

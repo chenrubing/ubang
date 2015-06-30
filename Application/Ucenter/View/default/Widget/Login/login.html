@@ -1,0 +1,113 @@
+<div data-role="login_info"></div>
+
+<div class="clearfix am-margin-top-sm"></div>
+<div class="am-container">
+  <div class="radius5padding am-panel am-panel-default">
+  <form action="__SELF__" method="post" class="lg_lf_form am-form">
+    <fieldset>
+      <legend><span class="am-icon-btn am-secondary am-icon-user"></span> 欢迎回到
+      <eq name="login_type" value="login"><a href="http://{:$_SERVER['HTTP_HOST']}__ROOT__" title="进入首页">{:C('WEB_SITE')}</a>
+        <else/>
+        {:C('WEB_SITE')}</eq>
+      </legend>
+      <div class="am-input-group am-form-group"  style="margin-top:20px"> <span class="am-input-group-label"><i class="am-icon-phone"></i></span>
+        <input type="text" id="inputEmail" class="m-form-field" placeholder="请输入{$ph}"  ajaxurl="/member/checkUserNameUnique.html" errormsg="请填写手机号"  nullmsg="请填写手机号" datatype="*1-16" value="" name="username" autocomplete="off">
+      </div>
+      <div class="am-input-group am-form-group form-control" id="password_block"> <span class="am-input-group-label"><i class="am-icon-lock"></i></span>
+        <input type="password" id="inputPassword" class="am-form-field"  placeholder="请输入密码"   errormsg="密码为6-20位" nullmsg="请填写密码" datatype="*6-20" name="password">
+      <!--  <span class="am-input-group-label"><a  href="javascript:void(0);" onclick="change_show(this)">show</a></span>--> </div>
+      <if condition="check_verify_open('login')">
+        <div class="am-input-group am-form-group"> <span class="am-input-group-label"><i class="am-icon-key"></i></span>
+          <input type="text" id="verifyCode" class="am-form-field"  placeholder="验证码"  errormsg="请填写验证码" nullmsg="请填写验证码" datatype="*5-5" name="verify">
+        </div>
+        <div> <img class="verifyimg reloadverify  " alt="点击切换" src="{:U('verify')}"  style="cursor:pointer;max-width: 100%"> </div>
+      </if>
+      <div class="am-checkbox am-cf">
+        <label class="am-link-muted">
+          <input type="checkbox" name="remember" value="1"  data-am-ucheck>
+          记住登录 </label>
+        <a class="am-link-muted am-fr" href="{:U('Member/mi',array('site'=>get_site()))}" >忘记密码？</a> </div>
+      <div>
+        <button type="submit" class="am-btn am-btn-danger am-btn-block log-in">提交</button>
+      </div>
+      
+      
+      <div class="am-margin-top-sm"><span class="am-link-muted">没有账号？</span>
+        <php>if(check_reg_type('username')){</php>
+        <a href="{:U('ucenter/member/register',array('type'=>'username','site'=>get_site()))}" >用户名注册</a>
+        <php>}</php>
+        <php>if(check_reg_type('email')){</php>
+        <a href="{:U('ucenter/member/register',array('type'=>'email','site'=>get_site()))}" >邮箱注册</a>
+        <php>}</php>
+        <php>if(check_reg_type('mobile')){</php>
+        <a href="{:U('ucenter/member/register',array('type'=>'mobile','site'=>get_site()))}"  class="am-text-danger">手机号注册</a>
+        <php>}</php>
+      </div>
+    </fieldset>
+  </form>
+</div></div>
+<div style="margin-top: 20px;"> {:hook('syncLogin')} </div>
+<script type="text/javascript">
+    var quickLogin = "{$login_type}";
+    $(document)
+            .ajaxStart(function () {
+                $("button:submit").addClass("log-in").attr("disabled", true);
+            })
+            .ajaxStop(function () {
+                $("button:submit").removeClass("log-in").attr("disabled", false);
+            });
+
+    function change_show(obj) {
+        if ($(obj).text().trim() == 'show') {
+            var value = $('#inputPassword').val().trim();
+            var html = ' <span class="am-input-group-label"><i class="am-icon-lock"></i></span><input type="text" value="' + value + '" id="inputPassword" class="form-control" placeholder="请输入密码" errormsg="密码为6-20位" nullmsg="请填写密码" datatype="*6-20" name="password">' +
+                    '<div class="am-input-group-label"><a style="width: 100%;height: 100%" href="javascript:void(0);" onclick="change_show(this)">hide</a></div>';
+            $('#password_block').html(html);
+        } else {
+            var value = $('#inputPassword').val().trim();
+            var html = ' <span class="am-input-group-label"><i class="am-icon-lock"></i></span><input type="password" value="' + value + '" id="inputPassword" class="form-control" placeholder="请输入密码" errormsg="密码为6-20位" nullmsg="请填写密码" datatype="*6-20" name="password">' +
+                    '<div class="am-input-group-label"><a style="width: 100%;height: 100%" href="javascript:void(0);" onclick="change_show(this)">show</a></div>';
+            $('#password_block').html(html);
+        }
+    }
+
+    $(function () {
+        $("form").submit(function () {
+            toast.showLoading();
+            var self = $(this);
+            $.post(self.attr("action"), self.serialize(), success, "json");
+            return false;
+            function success(data) {
+                if (data.status) {
+                    if (data.url==undefined&&quickLogin == "quickLogin") {
+                        $('[data-role="login_info"]').append(data.info);
+                        toast.success('欢迎回来。', '温馨提示');
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1500);
+                    } else {
+                        $('body').append(data.info);
+                        toast.success('欢迎回来，页面正在跳转，请稍候。', '温馨提示');
+                        setTimeout(function () {
+                            window.location.href = data.url;
+                        }, 1500);
+                    }
+                } else {
+                    toast.error(data.info, '温馨提示');
+                    //self.find(".Validform_checktip").text(data.info);
+                    //刷新验证码
+                    $(".reloadverify").click();
+                }
+                toast.hideLoading();
+            }
+        });
+        var verifyimg = $(".verifyimg").attr("src");
+        $(".reloadverify").click(function () {
+            if (verifyimg.indexOf('?') > 0) {
+                $(".verifyimg").attr("src", verifyimg + '&random=' + Math.random());
+            } else {
+                $(".verifyimg").attr("src", verifyimg.replace(/\?.*$/, '') + '?' + Math.random());
+            }
+        });
+    });
+</script>

@@ -1,0 +1,9 @@
+<eq name="type" value="personal">
+  <tr>
+    <td><eq name="required" value="1"><span style="color: #FF0047;vertical-align: middle;">*&nbsp;&nbsp;</span></eq>
+      {$field_name} </td>
+    <td><input type="text" onblur="check(this,{$field_id})" require="{$required}" min_length="{$validation.min}" max_length="{$validation.max}" text_type="{$child_form_type}" class="form-control" id="expand_{$field_id}" name="expand_{$field_id}" value="{$field_data|htmlspecialchars}">
+      <input type="hidden" class="canSubmit" id="canSubmit_{$field_id}" value="{$canSubmit}">
+      <neq name="input_tips" value=""> <span class="check-tips">{$input_tips}</span></neq></td>
+  </tr>
+</eq>

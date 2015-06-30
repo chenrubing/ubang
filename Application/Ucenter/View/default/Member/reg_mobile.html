@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<include file="Public/head"/>
+</head>
+<body>
+<div class="wrap margin-top-sm"><img src="__IMG__/logo.png"></div>
+<div style="">
+  <div  class="wrap reg_main">
+    <div class="regbox">
+      <ul>
+         <li class="title"><a href="http://{:$_SERVER['HTTP_HOST']}__ROOT__" title="进入首页">{:C('WEB_SITE')}</a>  <a href="{:U('login')}" class="reg"><i class="icon-circle-arrow-right"></i> 立即登陆</a></li>
+        <form  action="__SELF__" method="post" class="ajax-reg">
+          <php> if(isset($invite_user)){ </php>
+          <li class="alert alert-info">用户 {$invite_user['nickname']} 邀请您注册{:C('WEB_SITE')}，请填写注册信息~</li>
+          <input type="hidden" name="code" value="{$code}">
+          <php>}else{</php>
+          <if condition="$open_invite_register">
+            <li class="alert alert-info" >邀请注册用户请先<strong><a data-type="ajax" data-url="{:U('Ucenter/Member/inCode')}" data-title="输入邀请码" data-toggle="modal">输入邀请码</a></strong>，再填写注册信息~</li>
+          </if>
+          <php>}</php>
+          
+          <li>
+            <div class="input-group"> <span class="input-group-addon">手机号</span>
+              <input type="text" class="form-control"   placeholder="请输入手机号"  name="username">
+            </div>
+            <php>if(modC('MOBILE_VERIFY_TYPE', 0, 'USERCONFIG') == 1){</php>
+          <li>
+            <div class="input-group"> <span class="input-group-addon">验证码</span>
+              <input type="text" class="form-control" placeholder="验证码" name="reg_verify" >
+              <span class="input-group-btn">
+              <a class="btn btn-default" id="btnSendCode" data-row="getVerify">发送验证码</a>
+              </span> </div>
+          </li>
+          <php>}</php>
+          
+          
+         <php>if(modC('MOBILE_VERIFY_TYPE', 0, 'USERCONFIG') != 1){</php>
+         <!--开启了手机验证，无需再显示验证码-->
+          <if condition="check_verify_open('reg')">
+            <li>
+              <div class="input-group"> <span class="input-group-addon">验证码</span>
+                <input type="text" class="form-control" placeholder="请输入下方的验证码"  name="verify">
+              </div>
+            </li>
+            <li><img class="verifyimg reloadverify" src="{:U('verify')}" height="50" width="100%"></li>
+          </if>
+          <php>}</php>
+          <li> 已有账户， <a href="{:U('Home/User/login')}"  class="text-primary">登录</a> </li>
+          <input type="hidden" name="reg_type" value="mobile">
+          <button type="submit" class="btn btn-primary ajax-post btn-block">提 交</button>
+          <a  href="javascript:void(0)" id="tuichu"  class="btn btn-primary">退出</a>
+          </li>
+        </form>
+      </ul>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+var InterValObj; //timer变量，控制时间
+var count = 60; //间隔函数，1秒执行
+var curCount;//当前剩余秒数
+function sendMessage() {
+  　curCount = count;
+　　//设置button效果，开始计时
+     $("#btnSendCode").attr("disabled", "true");
+     $("#btnSendCode").text("重发验证码(" + curCount + ")");
+     InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
+　　  
+}
+//timer处理函数
+function SetRemainTime() {
+      if (curCount == 0) {                
+                window.clearInterval(InterValObj);//停止计时器
+                $("#btnSendCode").removeAttr("disabled");//启用按钮
+                $("#btnSendCode").text("重发验证码");
+            } else {
+                curCount--;
+                $("#btnSendCode").text("重发验证码(" + curCount + ")");
+        }
+  }
+//错误重置
+function SetTimeError() {
+	window.clearInterval(InterValObj);//停止计时器
+	$("#btnSendCode").removeAttr("disabled");//启用按钮
+	$("#btnSendCode").text("发送验证码");
+}
+
+$(function () {
+
+  $("#tuichu").click(function(){
+      $.ajax({
+          cache: false,
+          type: 'POST',
+          url: '{:U('ucenter/Member/logout')}',
+          data :true,
+          dataType:'json',
+          success:function(json){
+            alert(json['info']);
+
+          },
+          error:function(){
+            alert("网点数据加载失败");
+          }        
+      });
+
+  });
+
+
+	$("[data-row='getVerify']").click(function () {
+		$.post("{:U('ucenter/verify/sendVerify')}", {account: $('[name="username"]').val(), type: 'mobile', action: 'member',den:1}, function (res) {
+			sendMessage();
+			if (res.info=='验证短信发送成功!') {
+					updateAlert(res.info, 'success');
+				}else {
+					SetTimeError()
+					updateAlert(res.info);
+				}
+		})
+	})
+})
+
+var verifyimg = $(".verifyimg").attr("src");
+$(".reloadverify").click(function () {
+	if (verifyimg.indexOf('?') > 0) {
+			$(".verifyimg").attr("src", verifyimg + '&random=' + Math.random());
+		} else {
+			$(".verifyimg").attr("src", verifyimg.replace(/\?.*$/, '') + '?' + Math.random());
+		}
+		$(".reloadverify").click();
+});
+</script> 
+<include file="Public/js"/>
+</body>
+</html>

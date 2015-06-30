@@ -1,0 +1,259 @@
+<!DOCTYPE HTML>
+<html lang="">
+<head>
+<meta charset="UTF-8">
+<title>FrozenUI - 专注于移动web的UI框架</title>
+<meta name="Description" content="专注于移动web的UI框架，基于手机QQ规范" />
+<meta name="Keywords" content="frozen，frozenui，frozenjs，forzen ui，forzen js" />
+<meta name="author" content="fayching" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link type="image/x-icon" href="http://frozenui.github.io/static/favicon.ico" rel="icon">
+<link rel="stylesheet" type="text/css" href="__UI__/frozenui/1.2.1/css/global.css">
+<link rel="stylesheet" type="text/css" href="__CSS__/app.css">
+<script src="__JS__/jquery-2.0.3.min.js"></script>
+<script src="__JS__/base.js"></script>
+<script src="__JS__/ajax.js"></script>
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=geometry"></script>
+</head>
+<body style="overflow:hidden">
+<header><a class="head_back" onClick="history.go(-1);">返回</a> 查找服务商家 <a class="head_search" href="{:U('findservice')}">列表</a></header>
+<div id="main"></div>
+ <script type="text/javascript">
+    var map,markersArray = [];
+    var geocoder,map,marker = null;
+    var center = new qq.maps.LatLng(36.676553,117.004644);
+    var map = new qq.maps.Map(document.getElementById("main"), {
+        center: center,
+        zoom: 10
+    });
+    var infoWin = new qq.maps.InfoWindow({
+        map: map
+    }); 
+    geocoder = new qq.maps.Geocoder({
+        complete : function(result){
+            map.setCenter(result.detail.location);
+            var marker = new qq.maps.Marker({
+                map:map,
+                animation:qq.maps.MarkerAnimation.DROP,
+                position: result.detail.location
+            });
+            //设置Marker自定义图标的属性，size是图标尺寸，该尺寸为显示图标的实际尺寸，origin是切图坐标，该坐标是相对于图片左上角默认为（0,0）的相对像素坐标，anchor是锚点坐标，描述经纬度点对应图标中的位置
+        var anchor = new qq.maps.Point(0, 39),
+            size = new qq.maps.Size(42, 68),
+            origin = new qq.maps.Point(0, 0),
+            icon = new qq.maps.MarkerImage(
+                "http://open.map.qq.com/doc/img/nilt.png",
+                size,
+                origin,
+                anchor
+        );
+        marker.setIcon(icon);
+        marker.setShadow(iconb);
+        }
+    });
+    var feiyue;
+
+//测量
+$('#main').css({'height':$(window).height()-90+'px'});
+	//腾讯地图初始化
+	$.ajax({
+		type: 'POST',
+		url: '{:U('GetJson')}',
+		data :true,
+		dataType:'json',
+		success:function(json){
+			var li = '';
+			 //遍历json数据
+			$.each(json.members,function(index,array){
+				var center = new qq.maps.LatLng(array['map'].split(",")[0],array['map'].split(",")[1]);
+           		var marker = new qq.maps.Marker({
+               	position: center,
+                map: map,
+                icon: '/Application/App/Static/img/xiaobiao.png'                
+         	  });
+            markersArray.push(marker);
+            qq.maps.event.addListener(marker, 'click', function() {			
+                infoWin.open();
+                infoWin.setContent('<div class="tub-di"><div class="div-tu"><a href="{:U("see_business")}&uid='+array['uid']+'"><img src="http://img5.imgtn.bdimg.com/it/u=4288893114,1119765693&fm=21&gp=0.jpg" width="56" height="56" /></a></div><div class="div-tu-2"><div class="ui-nowrap">公司：'+array['nickname']+'</a></div><div class="ui-nowrap">地址：'+array['address']+'</div><div class="ui-nowrap ui-txt-padding">主营：'+array['category_ids']+'</div></div></div>');
+                infoWin.setPosition(center);
+            }); 
+		}); 
+		$("#list ul").append(li);
+		},
+		error:function(){
+			alert("网点数据加载失败");
+		}
+	});
+
+function deleteOverlays() {
+if (markersArray) {
+        for (i in markersArray) {
+            markersArray[i].setMap(null);
+        }
+        markersArray.length = 0;
+    }
+} 
+
+$(function(){
+    if($(".feiyue li").length<=5)
+    {
+        $(".prev").add(".next").css("visibility","hidden");
+    }
+	var moveNum = 2; //每次移动的数量
+    var moveTime = 300; //移动速度,毫秒
+    var scrollDiv = $(".spec-scroll .items ul"); //进行移动动画的容器
+    var scrollItems = $(".spec-scroll .items ul li"); //移动容器里的集合    
+    var pingmu=document.body.offsetWidth;
+    var dan=(pingmu-64)/5;
+    $(".items li").css("width",dan);
+    $(".items").css("width",pingmu-64);
+    var zhongjian=scrollItems.eq(2).offset().left;
+    scrollItems.eq(2).addClass("cheng");
+    var moveLength = dan * moveNum; //计算每次移动的长度   
+	var zhongjian=$(".spec-scroll .items ul li").eq(2).offset().left;
+    $(".ullis li a").last().attr("href",'/index.php?s=/app/demo/yuyue/id/'+scrollItems.eq(2).find("i").attr("alt"));
+    $(".ullis li a").last().attr("onclick",'return yanzheng('+scrollItems.eq(2).find("i").attr("alt")+")");
+	$(document).on("click",".spec-scroll .items ul li",function(){
+    	var dd=$(".spec-scroll .items ul li").index(this);
+    	var xx=$(this).offset().left;
+        $(".spec-scroll .items ul li").removeClass("cheng");
+        $(this).addClass("cheng");
+        $(".ullis li a").last().attr("href",'/index.php?s=/app/demo/yuyue/id/'+$(this).find("i").attr("alt"));
+        $(".ullis li a").last().attr("onclick",'return yanzheng('+$(this).find("i").attr("alt")+")");
+        $.ajax({
+            cache: true,
+            type: 'POST',
+            url: '{:U('getmaplist')}',
+            data :"uid="+$(this).find("i").attr("alt"),
+            dataType:'json',
+            beforeSend:function(){
+            deleteOverlays(); infoWin.close(); 
+            },
+            success:function(json){
+				if(json.members!=0){
+                    var li = '';
+                    $.each(json.members,function(index,array){
+						var center = new qq.maps.LatLng(array['map'].split(",")[0],array['map'].split(",")[1]);
+							var marker = new qq.maps.Marker({
+							position: center,
+							map: map,
+							icon: '/Application/App/Static/img/xiaobiao.png'                
+						  });
+                        markersArray.push(marker);
+						qq.maps.event.addListener(marker, 'click', function() {         
+							infoWin.open();
+							infoWin.setContent('<div class="tub-di"><div class="div-tu"><a href="{:U("see_business")}&uid='+array['uid']+'"><img src="http://img5.imgtn.bdimg.com/it/u=4288893114,1119765693&fm=21&gp=0.jpg" width="56" height="56" /></a></div><div class="div-tu-2"><div class="ui-nowrap">公司：'+array['nickname']+'</a></div><div class="ui-nowrap">地址：'+array['address']+'</div><div class="ui-nowrap ui-txt-padding">主营：'+array['category_ids']+'</div></div></div>');
+							infoWin.setPosition(center);
+						}); 
+           			}); 				   
+				}               
+				if(json.category==0)
+                {
+                    if(xx>zhongjian){
+                        var a=xx-zhongjian;
+                        scrollDiv.animate({ left:"-=" + a + "px"},moveTime);
+                    }
+                    else{
+                        var a=zhongjian-xx;
+                        scrollDiv.animate({ left:"+=" + a + "px"},moveTime);
+                    }
+                }
+                else
+                {
+					var fenlei="";
+                    $.each(json.category,function(index,array){
+						fenlei+='<li style="width:'+dan+'px;"> <i alt="'+array['id']+'" class="icon ui-icon">★</i><div  class="fontclass">'+array['title']+'</div></li>';						
+					});
+					$(".feiyue").html(fenlei);   
+                    $(".feiyue").css("left",0);                 
+                }
+                if($(".feiyue li").length<=5)
+                {
+                    $(".prev").add(".next").css("visibility","hidden");
+                }				  
+            },
+            error:function(){
+                alert("网点数据加载失败");
+            }
+            
+        });
+        
+	
+});
+	 
+    //下一张/**/
+    $(".spec-scroll .next").bind("click",function(){
+        if(($(".spec-scroll .items ul li").first().offset().left-32)==0)
+        {
+        }
+        else if(Math.abs(($(".spec-scroll .items ul li").first().offset().left)-33) > (dan*2) )
+        {
+            scrollDiv.animate({left: "+=" + moveLength + "px"}, moveTime);
+        }
+        else if(Math.abs(($(".spec-scroll .items ul li").first().offset().left)-33) > dan)
+        {
+            scrollDiv.animate({left: "+=" + dan + "px"}, moveTime);
+        }  
+        
+    });
+    //上一张
+    $(".spec-scroll .prev").bind("click",function(){
+        var add=($(".spec-scroll .items ul li").last().offset().left+dan)-(pingmu-64);
+        if(add>dan*2)
+        {
+            scrollDiv.animate({left:"-=" + moveLength + "px"}, moveTime);
+        }
+        else if(add>dan)
+        {
+            scrollDiv.animate({left:"-=" + dan + "px"}, moveTime);
+        }
+              
+    });
+});
+function yanzheng(id)
+{
+  var bll=false;
+  $.ajax({
+     async:false,
+     type: 'POST',
+     url: '{:U('cateif')}',
+     data :"id="+id,
+     dataType:'json',
+    success: function(json){
+      if(json['status']==0){
+        alert(json['info']);
+      }
+      else{
+        bll = true;
+      }
+    }
+  });
+  return bll;
+}
+</script> 
+
+<footer class="fo-li">
+<div class="spec-scroll"> 
+  <a class="prev">&lt;&lt;</a> <a class="next">&gt;&gt;</a><!---->
+  <div class="items "> 
+    <ul class="icon-lists feiyue clear">
+      <volist name="list" id="vo">
+
+        <li><i alt="{$vo.id}" class="icon ui-icon">★</i><div  class="fontclass">{$vo[title]} </div></li>
+
+      </volist>
+    </ul>
+  </div>
+</div>
+<ul class="ullis">
+  <li><a href="{:U('app/demo/getmap',array('id'=>$_GET['id']))}">首页</a><i> 　</i></li>
+  <li><input name="title" class="yuyue" type="text" placeholder="您的预约" value="" ><i> 　</i></li>
+  <li><a  href="/index.php?s=/app/demo/yuyue">预约</a><i> 　</i></li>
+</ul>
+</footer>
+</body>
+

@@ -1,0 +1,33 @@
+<extend name="Public/base" />
+<!-- 管理员用户组新增和编辑页面 -->
+
+<block name="body">
+<div class="main-title">
+  <h2>{$auth_group['id']?'编辑':'新增'}用户组</h2>
+</div>
+<div class="with-padding">
+  <form action="{:U('AuthManager/writeGroup')}" enctype="application/x-www-form-urlencoded" method="POST"  class="form-horizontal">
+    <table width="100%" border="0" class="table table-hover table-bordered ">
+      <tr>
+        <td width="23%">用户组</td>
+        <td width="77%"><input id="auth-title" type="text" name="title" class="input-4" value="{$auth_group.title}"/></td>
+      </tr>
+      <tr>
+        <td>描述</td>
+        <td><textarea id="auth-description" class="input-6" type="text" name="description">{$auth_group.description}</textarea></td>
+      </tr>
+    </table>
+    <div class="buttons">
+      <input type="hidden" name="id" value="{$auth_group.id}" />
+      <button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返回</button>
+    </div>
+  </form>
+</div>
+<block>
+<block name="script"> 
+  <script type="text/javascript" charset="utf-8">
+    //导航高亮
+    highlight_subnav('{:U('AuthManager/index')}');
+</script> 
+</block>

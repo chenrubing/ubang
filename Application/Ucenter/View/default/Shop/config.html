@@ -1,0 +1,28 @@
+<extend name="Base/common"/>
+<block name="body">
+<div class="am-container am-margin-top">
+    <form class="am-form" action="{:U('Ucenter/shop/config')}" method="post">
+      <div class="am-form-group">
+        <label for="shopname" >店铺名称</label>
+        <input type="text" class="form-control" id="shopname" name="shopname" value="{$user.shopname|op_t}"  placeholder="店铺名称">
+      </div>
+      <div class="am-form-group">
+        <label for="qq" >客服QQ</label>
+        <input type="text" class="form-control" id="qq" placeholder="店铺客服QQ" name="qq"  value="{$user.qq|htmlspecialchars}">
+      </div>
+       <div class="am-form-group">
+        <label for="weixin" >客服微信号</label>
+        <input type="text" class="form-control" id="weixin" placeholder="店铺客服QQ" name="weixin"  value="{$user.weixin|htmlspecialchars}">
+      </div>
+      <div class="am-form-group">
+        <label for="signature" >店铺广告语</label>
+        <textarea id="signature" name="signature" class="form-control"   style="width: 100%; height: 6em;resize: none"  placeholder="一句充满诱惑力的广告语">{$user.signature|htmlspecialchars}</textarea>
+      </div>
+          
+      <div class="am-form-group">
+        <input type="hidden" value="{$user.id}" name="id" />
+        <button type="submit" class="am-btn am-btn-secondary am-btn-block ajax-post" target-form='am-form'>保存设置</button>
+      </div>
+    </form>
+  </div>
+</block>

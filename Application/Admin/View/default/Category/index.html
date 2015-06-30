@@ -1,0 +1,177 @@
+<extend name="Public/base"/>
+<block name="body">
+ <div class="main-title">
+    <h2>栏目管理</h2>
+  </div>
+  <div class="with-padding">
+   <a class="btn" href="{:U('add')}"><i class="icon-plus"></i>创建分类</a> <a  class="btn btn-default " id="expandAllBtn"  href="javascript:void(0);"><i class="icon-resize-full"></i>展开</a> <a  class="btn btn-default " id="resetBtn" href="javascript:void(0);" ><i class="icon-resize-small"></i>收起</a> </div>
+  <div class="data-table with-padding">
+  <table width="100%" cellspacing=0 cellpadding=0   class="table table-bordered" style="margin-bottom:0px">
+    <thead>
+      <tr>
+        <th>栏目名称及排序</th>
+        <th width="350" >操作</th>
+      </tr>
+    </thead>
+  </table>
+  <ul id="Category_tree" class="CategoryTree">
+  </ul>
+  </div>
+  <!-- /表格列表 --> 
+</block>
+<block name="script"> 
+  <SCRIPT type="text/javascript">
+  
+		var demoMsg = {
+			async:"正在后台加载，请稍后...",
+			expandAllOver: "全部展开完毕", 
+			expandAll: "已经是全部展开了"
+		}
+		var setting = {
+		<if condition="C('CATEGORY_JSON') eq 0">
+			data: {
+				simpleData: {
+					enable: true
+				}
+			},
+		</if>
+			async: {
+				enable: true,
+				url: "{:U('GetTree')}",
+				autoParam: ["id", "name=n", "level=lv"],
+				otherParam: {"otherParam": "zTreeAsyncTest"},
+				type: "get"
+			},
+			view: {
+				dblClickExpand: false,
+				addDiyDom: addDiyDom
+			},
+			callback: {
+				beforeAsync: beforeAsync,
+				onAsyncSuccess: onAsyncSuccess,
+				onAsyncError: onAsyncError
+			}
+		};
+	<if condition="C('CATEGORY_JSON') eq 0">
+	var zNodes =[
+		     <volist name="alist" id="vo">
+			   { id:"{$vo.id}", pId:"{$vo.pid}", name:"{$vo.title}", status:"{$vo.status}", open:true} <if condition="$i neq count($alist)">,</if>
+			</volist>
+	];
+	</if>
+		
+
+		function addDiyDom(treeId, treeNode) {
+			var aObj = $("#" + treeNode.tId + "_a");
+			
+			if(!treeNode.pId){
+				 treeNode.pId=0;
+			}
+			(treeNode.status==1) ? status="<a class='zTree-green ajax-get' href='__URL__/setstatus/ids/" + treeNode.id + "/status/0.html'>[禁用]</a>" : status="<a class='zTree-red ajax-get'  href='__URL__/setstatus/ids/" + treeNode.id + "/status/1.html' title='是否启用该分类？'>[启用]</a>";
+			if ($("#diyBtn_" + treeNode.id).length > 0) return;
+			var editStr = " <a   data-trigger='modal' class='zTree-add' href='__URL__/add/pid/" + treeNode.pId + ".html'  data-title='创建子分类'></a> <span class='rightbtn'>"+status +"  <a href='index.php?s=/cms/article/lists/category/" + treeNode.id + ".html' target='_blank'>[访问]</a> <a  href='__URL__/edit/id/" + treeNode.id + "/pid/" + treeNode.pId + ".html'>[编辑]</a>  <a class='confirm ajax-get' href='__URL__/remove/id/" + treeNode.id + ".html'>[删除]</a></span>";
+			aObj.append(editStr);
+		};
+
+		function beforeAsync() {
+			curAsyncCount++;
+		}
+		
+		function onAsyncSuccess(event, treeId, treeNode, msg) {
+			curAsyncCount--;
+			if (curStatus == "expand") {
+				expandNodes(treeNode.children);
+			} else if (curStatus == "async") {
+				asyncNodes(treeNode.children);
+			}
+
+			if (curAsyncCount <= 0) {
+				if (curStatus != "init" && curStatus != "") {
+					updateAlert(demoMsg.expandAllOver, 'success');
+					asyncForAll = true;
+				}
+				curStatus = "";
+			}
+		}
+
+		function onAsyncError(event, treeId, treeNode, XMLHttpRequest, textStatus, errorThrown) {
+			curAsyncCount--;
+
+			if (curAsyncCount <= 0) {
+				curStatus = "";
+				if (treeNode!=null) asyncForAll = true;
+			}
+		}
+
+		var curStatus = "init", curAsyncCount = 0, asyncForAll = false,
+		goAsync = false;
+		function expandAll() {
+			if (!check()) {
+				return;
+			}
+			var zTree = $.fn.zTree.getZTreeObj("Category_tree");
+			if (asyncForAll) {
+				updateAlert(demoMsg.expandAll, 'error');
+				zTree.expandAll(true);
+			} else {
+				expandNodes(zTree.getNodes());
+				if (!goAsync) {
+					updateAlert(demoMsg.expandAll, 'error');
+					curStatus = "";
+				}
+			}
+		}
+		function expandNodes(nodes) {
+			if (!nodes) return;
+			curStatus = "expand";
+			var zTree = $.fn.zTree.getZTreeObj("Category_tree");
+			for (var i=0, l=nodes.length; i<l; i++) {
+				zTree.expandNode(nodes[i], true, false, false);
+				if (nodes[i].isParent && nodes[i].zAsync) {
+					expandNodes(nodes[i].children);
+				} else {
+					goAsync = true;
+				}
+			}
+		}
+
+		function asyncNodes(nodes) {
+			if (!nodes) return;
+			curStatus = "async";
+			var zTree = $.fn.zTree.getZTreeObj("Category_tree");
+			for (var i=0, l=nodes.length; i<l; i++) {
+				if (nodes[i].isParent && nodes[i].zAsync) {
+					asyncNodes(nodes[i].children);
+				} else {
+					goAsync = true;
+					zTree.reAsyncChildNodes(nodes[i], "refresh", true);
+				}
+			}
+		}
+
+		function reset() {
+			if (!check()) {
+				return;
+			}
+			asyncForAll = false;
+			goAsync = false; 
+			updateAlert('重载完毕', 'success');
+
+			$.fn.zTree.init($("#Category_tree"), setting);
+		}
+
+		function check() {
+			if (curAsyncCount > 0) {
+				art.dialog.tips(demoMsg.async,'1');
+				return false;
+			}
+			return true;
+		}
+		$(document).ready(function() {
+			$("#expandAllBtn").bind("click", expandAll);
+			$("#resetBtn").bind("click", reset);
+			$.fn.zTree.init($("#Category_tree"), setting <if condition="C('CATEGORY_JSON') eq 0">,zNodes</if>);
+			
+		});
+	</SCRIPT> 
+</block>

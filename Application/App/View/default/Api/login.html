@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="__Public__/js/jquery-1.10.2.min.js"></script>
+</head>
+
+<body>
+<form action="" method="post" class="lg_lf_form ">
+  <input type="text"  name="username" >
+  <input type="password"  name="password">
+  <button type="submit" class="btn ajax-post">登 录</button>
+</form>
+
+<script type="text/javascript">
+	$(function(){
+		$(".btn").click(function(e) {
+			var username=$("input[name='username']").val();
+			var password=$("input[name='password']").val();
+
+			$.ajax({
+			   type: "POST",
+			   url: "index.php?s=/App/Api/login",
+			   data: "username="+username+"&password="+password,
+			   success: function(msg){
+					//alert(msg['status']);
+					if(msg['status']=="1")
+					{
+						alert(msg['data']['msg']);
+						
+
+					}
+			   }
+			});
+            
+        });
+		
+		
+			
+		
+	})
+</script>
+</body>
+</html>

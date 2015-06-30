@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html lang="">
+<head>
+<meta charset="UTF-8">
+<title>FrozenUI - 专注于移动web的UI框架</title>
+<meta name="Description" content="专注于移动web的UI框架，基于手机QQ规范" />
+<meta name="Keywords" content="frozen，frozenui，frozenjs，forzen ui，forzen js" />
+<meta name="author" content="fayching" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link type="image/x-icon" href="http://frozenui.github.io/static/favicon.ico" rel="icon">
+<!--统计代码 -->
+<!-- <link rel="stylesheet" type="text/css" href="http://i.gtimg.cn/vipstyle/frozenui/1.2.1/css/global.css?_bid=306"/> -->
+<link rel="stylesheet" type="text/css" href="__UI__/frozenui/1.2.1/css/global.css">
+<link rel="stylesheet" type="text/css" href="__CSS__/app.css">
+<!-- <script src="http://i.gtimg.cn/vipstyle/frozenjs/lib/zepto.min.js?_bid=304"></script>
+        <script src="http://i.gtimg.cn/vipstyle/frozenjs/1.0.1/frozen.js?_bid=304"></script> -->
+<script src="__UI__/frozenjs/lib/zepto.min.js"></script>
+<script src="__UI__/frozenjs/1.0.1/frozen.js"></script>
+<script src="__JS__/ajax.js"></script>
+</head>
+<body>
+<header><a class="head_back" onClick="history.go(-1);">返回</a> 家居服务 </header>
+<form    method="post" class="demo">
+<div class="ui-form-item ui-border-b">
+        <label for="#">
+            需求标题：
+        </label>
+        <input name="title" type="text" placeholder="明确的标题让商家更容易发现">
+    </div>
+<div class="ui-form-item ui-form-item-textarea ui-border-b">
+        <label for="#">
+            需求详情：
+        </label>
+        <textarea  name="content"  type="text" placeholder="具体情况描述，如房子平米数，具体需要哪些服务" style="resize: none;"></textarea>
+    </div>
+<div class="ui-form-item ui-border-b">
+        <label for="#">
+            图片说明：
+        </label>
+         <input  name="img"  type="text" placeholder="上传图片">
+</div>
+<div class="ui-form-item ui-border-b">
+        <label for="#">
+            期望出价：
+        </label>
+        <input  name="price"  type="text" placeholder="您的心理价位">
+    </div>
+<div class="ui-form-item ui-border-b">
+    <label for="#">
+        小　　费：
+    </label>
+    <input  name="xiaofei"  type="text" placeholder="您的心理价位" value="0.00">
+</div>
+
+<div class="ui-form-item ui-border-b">
+        <label for="#">
+            期望时间：
+        </label>
+        <input  name="time"  type="text" placeholder="期望何时开始施工/设计">
+    </div>
+    <div class="ui-form-item ui-border-b">
+        <label for="#">
+            联系手机：
+        </label>
+        <input  name="mobile"  type="text" placeholder="请留下可用联系方式">
+    </div>
+<div class="ui-form-item ui-border-b">
+        <label for="#">
+            具体地点：
+        </label>
+        <input  name="address"  type="text" placeholder="以便工作人员上门">
+    </div>
+  <input type="hidden" name="cid" value="{$_GET[id]}" >
+  
+
+  <div class="ui-btn-group-tiled ui-btn-wrap">
+    <button type="button" class="ui-btn-lg ui-btn-primary ajax-post confirm" url="{:U('user_post')}" confirm-info="确定发布吗？">
+        确定发布
+    </button>
+    <button class="ui-btn-lg" onClick="history.go(-1);">
+        放弃
+    </button>
+</div>
+</form>
+
+
+<div class="empty"></div>
+<footer>
+  <li><a href="{:U('App/demo/index')}"><span class="f1"  href="#"></span><i>首页</i></a></li>
+  <li><a href="#"><span class="f2"  href="#"></span><i>发需求</i></a></li>
+  <li><a href="#"><span class="f3"  href="#"></span><i>找服务</i></a></li>
+  <li><a href="#"><span class="f4"  href="#"></span><i>我的</i></a></li>
+  </ul>
+</footer>
+</body>

@@ -1,0 +1,23 @@
+<extend name="Base/common"/>
+<block name="body">
+  <div class="am-container">
+    <empty name="list">
+      <div class="am-alert am-alert-danger am-margin-top" data-am-alert> 您暂时还没有收藏 </div>
+    </empty>
+    <div data-am-widget="list_news" class="am-list-news am-list-news-default">
+      <div class="am-list-news-bd">
+        <ul class="am-list">
+          <volist name="list" id="vo">
+            <li class="am-g am-list-item-desced am-list-item-thumbed am-list-item-thumb-left">
+              <div class="am-u-sm-4 am-list-thumb"> <a href="{:U('Home/Goods/goodsDetail',array('id'=>$vo['id']))}" > <img src="{$vo.img|get_cover='path'}"/> </a> </div>
+              <div class=" am-u-sm-8 am-list-main">
+                <h3 class="am-list-item-hd"> <a href="{:U('Home/Goods/goodsDetail',array('id'=>$vo['id']))}">{$vo[price]}{:msubstr($vo[title],0,14)}</a>      <button url="{:U('Ucenter/Collection/delshopbook',array('id'=>$vo[id]))}" type="button" class="am-btn am-btn-warning am-btn-sm am-fr  am-margin-left-sm am-radius ajax-get" >取消收藏</button></h3>
+              
+              </div>
+            </li>
+          </volist>
+        </ul>
+      </div>
+    </div>
+  </div>
+</block>

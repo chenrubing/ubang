@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+
+<html lang="">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>FrozenUI - 专注于移动web的UI框架</title>
+
+<meta name="Description" content="专注于移动web的UI框架，基于手机QQ规范" />
+
+<meta name="Keywords" content="frozen，frozenui，frozenjs，forzen ui，forzen js" />
+
+<meta name="author" content="fayching" />
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="format-detection" content="telephone=no">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<link type="image/x-icon" href="http://frozenui.github.io/static/favicon.ico" rel="icon">
+
+<!--统计代码 -->
+
+<!-- <link rel="stylesheet" type="text/css" href="http://i.gtimg.cn/vipstyle/frozenui/1.2.1/css/global.css?_bid=306"/> -->
+
+<link rel="stylesheet" type="text/css" href="__UI__/frozenui/1.2.1/css/global.css">
+
+<link rel="stylesheet" type="text/css" href="__CSS__/app.css">
+
+<!-- <script src="http://i.gtimg.cn/vipstyle/frozenjs/lib/zepto.min.js?_bid=304"></script>
+
+        <script src="http://i.gtimg.cn/vipstyle/frozenjs/1.0.1/frozen.js?_bid=304"></script> -->
+
+<script src="__UI__/frozenjs/lib/zepto.min.js"></script>
+
+<script src="__UI__/frozenjs/1.0.1/frozen.js"></script>
+
+<script src="__JS__/ajax.js"></script>
+
+</head>
+
+<body>
+
+<header><a class="head_back" onClick="history.go(-1);">返回</a> 查找服务商家 <a class="head_search" href="{:U('getmap')}">地图</a></header>
+
+<div id="select_box">
+	<div class="left"><a></a></div>
+    <div id="Category"></div>
+	<div class="right"><a></a></div>
+</div>
+
+<ul class="ui-list ui-list-text ui-list-link ui-border-b findBusiness" id="list" style="border-top:1px solid #e0e0e0">
+</ul>
+
+<div class="empty"></div>
+<footer>
+  <li><a href="#"><span class="f1"  href="#"></span><i>首页</i></a></li>
+  <li><a href="#"><span class="f2"  href="#"></span><i>发需求</i></a></li>
+  <li><a href="#"><span class="f3"  href="#"></span><i>找服务</i></a></li>
+  <li><a href="#"><span class="f4"  href="#"></span><i>我的</i></a></li>
+  </ul>
+</footer>
+<style type="text/css">
+	.i-he{overflow: hidden;text-overflow: ellipsis;-webkit-box-orient: vertical;line-height: 14px;-webkit-line-clamp: 2;  max-height: 28px;}
+
+</style>
+<script type="text/javascript">
+function Category(cid) {
+	var el;
+	$.ajax({
+		async:true,
+		type: 'POST',
+		url: '{:U('GetJson')}',
+		data :'cid='+cid,
+		dataType:'json',
+		beforeSend:function(){
+			el=$.loading({  content:'努力加载中...', })
+		},
+		success:function(json){
+			var span = '';
+			var li = '';
+				$.each(json.category,function(index,array){
+						span += "<span onClick='Category("+array['id']+");'>"+array['title']+"</span>";
+	 			});			
+
+				$.each(json.members,function(index,array){
+						li += "<li class='ui-border-t'><span></span> <div><a href='{:U('see_business')}&uid="+array['uid']+"'>"+array['nickname']+"</a><div><div><i>经营年限：5年</i></div><div class='ui-nowrap-multi ui-txt-padding'><i >主营："+array['category_ids']+"</i></div><i>地址："+array['address']+"</i></li>";
+	 			});			
+			if(span){
+				$("#list").html(li); 
+				$("#Category").html(span); 
+			}
+			el.loading("hide");
+		},
+		error:function(){
+			alert("分类获取失败");
+
+		}
+
+	});
+
+};  
+
+Category();
+
+</script>
+
+
+
+</body>
+

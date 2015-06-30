@@ -1,0 +1,20 @@
+<extend name="Public/dialog" />
+<block name="body">
+  <div class="DialogBox">
+      <!-- 表单 -->
+      <form id="form" action="{:U('generate')}" method="post" class="form-horizontal">
+        <table width="100%" border="0" cellspacing="0" class="table table-condensed">
+          <tr>
+            <td width="45%" style=" border:none"> 数据表<span class="check-tips">（当前数据库的所有表）</span></td>
+            <td width="55%" style=" border:none"><select name="table">
+                <volist name="list" id="table"> 
+                   
+                      <option value="{$table.name}">{$table.name}</option>
+                      </volist>
+              </select></td>
+          </tr>
+        </table>
+        <input type="hidden" name="id" value="{$id}"/>
+      </form>
+    </div>
+</block>

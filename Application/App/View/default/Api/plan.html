@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<script src="__Public__/js/jquery-1.10.2.min.js"></script>
+<style >
+select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;}
+</style>
+</head>
+
+<body>
+	
+    <form action="" method="get">
+    	
+        商家：<select class="bid" name="bid">
+        		<volist name="listke" id="vo">
+                	<option value="{$vo.uid}">{$vo.nickname}</option>
+                </volist>
+        	 </select><br/>
+        总金额：<input name="total_money" type="text" /><br/>
+        定金：<input name="money"  readonly="readonly" value="{$arrfo[switchs]}" type="text" /><br/>
+        <input class="butt" value="提交" name="" type="button" />
+    
+    </form>
+	<script>
+		$(".butt").click(function(e) {
+                
+                var bid=$(".bid option:selected").val();
+                var total_money=$("input[name='total_money']").val();
+                var money=$("input[name='money']").val();
+                
+                $.ajax({
+               type: "POST",
+               url: "index.php?s=/App/Api/plan",
+               data: "bid="+bid+"&total_money="+total_money+"&money="+money,
+               success: function(msg){
+                    if(msg['status']=="1")
+                    {
+                        alert(msg['msg']);
+                    }
+                    else
+                    {
+                        alert(msg['info']);
+                    }
+                  },
+               });
+                
+                
+            }); 
+		
+    
+    </script>
+</body>
+</html>

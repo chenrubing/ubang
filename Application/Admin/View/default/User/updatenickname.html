@@ -1,0 +1,33 @@
+<extend name="Public/base" />
+<block name="body">
+  <div class="main-title">
+  <h2>修改昵称</h2>
+</div>
+  <!-- 标题栏 -->
+      <div class="with-padding">
+  <ul class="nav nav-secondary group_nav">
+    <li class="active"><a href="{:U('updatenickname')}">修改昵称</a></li>
+    <li ><a href="{:U('updatepassword')}">修改密码</a></li>
+  </ul>
+  <form action="{:U('User/submitNickname')}" method="post" class="form-horizontal" autocomplete="off" style="margin-top:10px">
+    <table width="100%"  cellpadding="0" cellspacing="0" class="table  table-hover table-bordered">
+      
+      <!-- 修改密码表单 -->
+      
+      <tr>
+        <td width="27%">密码：</td>
+        <td width="73%"><input type="password" name="password" class="text input-4"  autocomplete="off"/>
+          <span class="check-tips">(请输入密码)</span></td>
+      </tr>
+      <tr>
+        <td>昵称：</td>
+        <td><input type="text" name="nickname" class="text input-4" autocomplete="off" value="{:get_username()}"/>
+          <span class="check-tips">(请输入新昵称)</span></td>
+      </tr>
+    </table>
+    <div class="buttons">
+      <button type="submit" class="btn  ajax-post" target-form="form-horizontal">确定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返回</button>
+    </div>
+  </form>
+</block>

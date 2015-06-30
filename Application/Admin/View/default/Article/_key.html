@@ -1,0 +1,360 @@
+<td width="20%">{$field.title|htmlspecialchars}</td>
+<if condition="$field['name'] == 'action'">
+  <p style="color: #f00;">开发人员注意：你使用了一个名称为action的字段，由于这个字段名称会与form[action]冲突，导致无法提交表单，请换用另外一个名字。</p>
+</if>
+<td width="80%">
+<php>
+//处理默认值
+if(!$data[$field[name]]){
+	 $data[$field['name']] = $field[value];
+}
+</php>
+<switch name="field.type">
+    <case value="text">
+      <input type="text" name="{$field.name}" value="{$data[$field['name']]|htmlspecialchars}" class="text input-4 form-control"/>
+    </case>
+    <case value="label"> {$data[$field['name']]} </case>
+    <case value="hidden">
+      <input type="hidden" name="{$field.name}" value="{$data[$field['name']]}" />
+    </case>
+    <case value="readonly">
+      <input type="text" name="{$field.name}" value="{$data[$field['name']]}" class="text input-2 form-control" placeholder="无需填写" readonly/>
+    </case>
+    <case value="integer">
+      <input type="text" name="{$field.name}" value="{$data[$field['name']]}" class="text input-1 form-control"/>
+    </case>
+    <case value="uid">
+      <input type="text" name="{$field.name}" value="{$data[$field['name']]}" class="text input-2 form-control" />
+    </case>
+    <case value="select">
+      <select name="{$field.name}" class="form-control" style="width:auto;">
+        <volist name=":parse_field_attr($field['extra'])" id="vo"> <option value="{$key}"  <eq name="data[$field['name']]" value="$key">selected</eq>>{$vo}  </option>  </volist>
+        
+      </select>
+    </case>
+    <case value="radio">
+      <volist name=":parse_field_attr($field['extra'])" id="vo">
+                                  <label class="radio inline"> <input type="radio" value="{$key}" name="{$field.name}" <eq name="data[$field['name']]" value="$key">checked="checked"</eq> >{$vo} </label>
+                                </volist>
+    </case>
+    <case value="singleImage">
+       <div class="controls">
+            <div id="upload_single_image_{$field.name}" style="padding-bottom: 5px;">选择图片</div>
+            <div class="upload-img-box  kanban-list"  id="C_{$field.name}">
+                <div class="upload-pre-item"> 
+                 <notempty name="data[$field[name]]">
+                   <div class="each kanban-item card">
+                    <php>$aIds = explode(',',$data[$field[name]]);</php>
+                        <img src="{$data[$field[name]]|get_cover='path'}" href="{$aIds[0]|get_cover='path'}" data-toggle="lightbox" data-caption="{$aIds[1]}"  id="{$field.name}_view">
+                        <span class="caption"><a href="javascript:void(0);" onclick="Cutimg('{$field.name}')">剪裁</a><a href="javascript:void(0);"  onclick="$(this).closest('.each').remove();">删除</a></span> <strong class="card-heading">  
+                        <input type="hidden" name="{$field.name}[img][]" value="{$aIds[0]}" id="{$field.name}_input"/> 
+                        <input type="text" name="{$field.name}[title][]" value="{$aIds[1]}" placeholder="请输入图片标题"/>
+                </strong>
+            </div>
+                </notempty>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(function () {
+                var uploader_{$field.name}= WebUploader.create({
+                    // 选完文件后，是否自动上传。
+                    auto: true,
+                    // swf文件路径
+                    swf: 'Uploader.swf',
+                    // 文件接收服务端。
+                    server: "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+                    // 选择文件的按钮。可选。
+                    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+                    pick: '#upload_single_image_{$field.name}',
+                    // 只允许选择图片文件。
+                    accept: {
+                        title: 'Images',
+                        extensions: 'gif,jpg,jpeg,bmp,png',
+                        mimeTypes: 'image/*'
+                    }
+                });
+                uploader_{$field.name}.on('fileQueued', function (file) {
+                    uploader_{$field.name}.upload();
+                });
+                /*上传成功*/
+                uploader_{$field.name}.on('uploadSuccess', function (file, data) {
+                    if (data.status) {
+						
+						 var str='';
+						 str+='<div class="each kanban-item card">';
+						 str+='<img src="'+ data.path+'" id="{$field.name}_view" data-toggle="lightbox">';
+						 str+='<span class="caption">';
+					 	 str+='<a href="javascript:void(0);" onclick="Cutimg(\'{$field.name}\')">剪裁</a>';
+					 	 str+='<a href="javascript:void(0);"  onclick="$(this).closest(\'.each\').remove();">删除</a>';
+					 	 str+='</span>';
+						 str+='<strong class="card-heading">';
+						 str+=' <input type="hidden" name="{$field.name}[img][]" value="'+ data.id+'"  id="{$field.name}_input"/>';
+						 str+='<input type="text" name="{$field.name}[title][]" value="'+ data.name.split('.')[0]+'" placeholder="请输入图片标题" />';
+						 str+='</strong></div>';
+								  
+      					$("#C_{$field.name}").find('.upload-pre-item').html(str);
+                        uploader_{$field.name}.reset();
+						
+                    } else {
+                        updateAlert(data.info);
+                        setTimeout(function () {
+                            $('#top-alert').find('button').click();
+                            $(that).removeClass('disabled').prop('disabled', false);
+                        }, 1500);
+                    }
+                });
+            })
+        </script>
+
+    </case>
+
+    <case value="multiImage">
+        <div class="controls multiImage">
+            <div id="upload_multi_image_{$field.name}" style="padding-bottom: 5px;">选择图片</div>
+            <div class="upload-img-box" id="C_{$field.name}">
+       
+                <div class="upload-pre-item kanban-list" >
+                    <notempty name="data[$field[name]]">
+                        <php>$aIds = explode('|',$data[$field[name]]);</php>
+                        <volist name="aIds" id="aId">
+                        <php>$img_array = explode(',',$aId);</php>
+                            <div class="each kanban-item card">
+                                    <img src="{$img_array[0]|get_cover='path'}" href="{$img_array[0]|get_cover='path'}" data-toggle="lightbox" id="{$field.name}_{$img_array[0]}_view">
+                                  <span class="caption"> <a href="javascript:void(0);" onclick="Cutimg('{$field.name}_{$img_array[0]}')">剪裁</a><a href="javascript:void(0);"  onclick="$(this).closest('.each').remove();">删除</a></span>
+                                  <strong class="card-heading">
+                                    <input type="hidden" name="{$field.name}[img][]" value="{$img_array[0]}" id="{$field.name}_{$img_array[0]}_input"/>
+                                  <input type="text" name="{$field.name}[title][]" value="{$img_array[1]}" placeholder="请输入图片标题"/></strong>
+                            </div>
+                        </volist>
+                    </notempty>
+                </div>  
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                var id = "#upload_multi_image_{$field.name}";
+                var limit = parseInt('{$field.opt}');
+                var uploader_{$field.name}= WebUploader.create({
+                    // 选完文件后，是否自动上传。
+                      // swf文件路径
+                    swf: 'Uploader.swf',
+                    // 文件接收服务端。
+                    server: "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+                    // 选择文件的按钮。可选。
+                    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+                    //pick: '#upload_multi_image_{$field.name}',
+                    pick: {'id': id, 'multi': true},
+                    fileNumLimit: limit,
+                    // 只允许选择图片文件。
+                    accept: {
+                        title: 'Images',
+                        extensions: 'gif,jpg,jpeg,bmp,png',
+                        mimeTypes: 'image/*'
+                    }
+                });
+                uploader_{$field.name}.on('fileQueued', function (file) {
+                    uploader_{$field.name}.upload();
+                });
+                uploader_{$field.name}.on('uploadFinished', function (file) {
+                    uploader_{$field.name}.reset();
+                });
+                /*上传成功*/
+                uploader_{$field.name}.on('uploadSuccess', function (file, data) {
+                          if (data.status) {
+							  
+                             if($('#C_{$field.name} img').length>limit){
+                                  updateAlert('超过图片限制');
+                                  return;
+                              }
+							  
+					var str='';
+					 str+='<div class="each kanban-item card">';
+					 str+='<img src="'+ data.path+'"  data-toggle="lightbox"  id="{$field.name}_'+ data.id+'_view">';
+					 str+='<span class="caption">';
+					 str+='<a href="javascript:void(0);" onclick="Cutimg(\'{$field.name}_'+ data.id+'\')">剪裁</a>';
+					 str+='<a href="javascript:void(0);"  onclick="$(this).closest(\'.each\').remove();">删除</a>';
+					 str+='</span>';
+					 str+='<strong class="card-heading">';
+					 str+='<input type="hidden" name="{$field.name}[img][]" value="'+ data.id+'" id="{$field.name}_'+ data.id+'_input"/>';
+					 str+='<input type="text" name="{$field.name}[title][]" value="'+ data.name.split('.')[0]+'" placeholder="请输入图片标题" />';
+					 str+='</strong></div>';
+								  
+                     $("#C_{$field.name}").find('.upload-pre-item').append(str);
+						
+                      } else {
+                            updateAlert(data.info);
+                            setTimeout(function () {
+                                $('#top-alert').find('button').click();
+                                $(that).removeClass('disabled').prop('disabled', false);
+                            }, 1500);
+                        }
+                });
+            })
+			
+        </script>
+
+    </case>
+     <case value="viewImage">
+      <div class="controls">
+          <div data-toggle="upimg" name="{$field.name}" id="{$field.name}" title="请上传图片" maxnum="1" value="{$data[$field['name']]}" src="{$data[$field[name]]|get_cover='path'}"></div>
+      </div>
+    </case>
+    
+     <case value="viewFile">
+      <div class="controls">
+          <div data-toggle="upfield" name="{$field.name}" title="请上传附件" maxnum="1" value="{$data[$field['name']]}" id="{$field.name}" src="{$data[$field[name]]|get_file='ext'}"></div>
+         
+      </div>
+    </case>
+    <case value="checkbox">
+      <volist name=":parse_field_attr($field['extra'])" id="vo">
+                                  <label class="checkbox inline"> <input type="checkbox" value="{$key}" name="{$field.name}[]"  <if condition="check_document_position($data[$field['name']],$key)">checked="checked"</if>>{$vo} </label>
+                                   </volist>
+    </case>
+    <case value="editor"> {:W('Common/Ueditor/editor',array($field[name],$field[name],$data[$field['name']],'100%','400px','all'))} </case>
+    <case value="textarea">
+      <textarea name="{$field.name}" class="text input-5 form-control">{$data[$field['name']]|htmlspecialchars}</textarea>
+    </case>
+    <case value="time">
+      <php> $importDatetimePicker = true;
+        //默认为当前时间
+        if(!$field['value']){
+        $field['value'] = time();
+        } </php>
+      <input type="hidden" name="{$field.name}" value="{$data[$field['name']]}"/>
+      <input type="text" data-field-name="{$field.name}" class="text input-2 time form-control" value="{$field.value|time_format}" placeholder="请选择时间"/>
+    </case>
+    
+    <!--添加城市选择（需安装城市联动插件,css样式不好处理排版有点怪）-->
+    <case value="city">
+      <style type="text/css">
+    			.form-control {
+				display:inline-block;
+				width: 120px;
+				}
+			</style>
+      <!--修正在编辑信息时无法正常显示已经保存的地区信息--> 
+      {:hook('J_China_City',array('province'=>$field['value']['0'],'city'=>$field['value']['1'],'district'=>$field['value']['2'],'community'=>$field['value']['3']))} </case>
+    
+    <!--弹出窗口选择并返回值（目前只支持返回ID）开始-->
+    <case value="dataselect">
+      <input type="text" name="{$field.name}" id="{$field.name}" value="{$data[$field['name']]|htmlspecialchars}"  class="text input-3 form-control" />
+      <input class="btn" style="margin-left:10px" type="button" value="选择" onclick="openwin('{$field.opt}','600','500')">
+      <script type="text/javascript">
+						//弹出窗口
+						function openwin(url,width,height){
+						    var l=window.screen.width ;
+						    var w= window.screen.height;
+						    var al=(l-width)/2;
+						    var aw=(w-height)/2;
+						    var OpenWindow=window.open(url,"弹出窗口","toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,width="+width+",height="+height+",top="+aw+",left="+al+"");
+						    OpenWindow.focus();
+						if(OpenWindow!=null){ //弹出窗口关闭事件
+						//if(window.attachEvent) OpenWindow.attachEvent("onbeforeunload",   quickOut);
+						if(window.attachEvent) OpenWindow.attachEvent("onunload",   quickOut);
+						}
+						}
+						//关闭触发方法
+						function quickOut()
+						{
+						alert("窗口已关闭");
+						}
+				 </script> 
+    </case>
+    <!--弹出窗口选择并返回值（目前只支持返回ID）结束-->
+    
+    <case value="kanban">
+      <input type="hidden" name="{$field.name}" value='{:json_encode($field["value"])}'/>
+      <div class="kanbans" id="{$field.name}">
+        <php>foreach($field['value'] as $key =>$kanban){</php>
+        <div class="kanban panel" data-id="{$kanban['data-id']}" data-title="{$kanban['title']}">
+          <div class="panel-heading"> <strong>{$kanban['title']}</strong> </div>
+          <div class="panel-body">
+            <div class="kanban-list">
+              <volist name="kanban.items" id="vo">
+                <div class="kanban-item item" data-id="{$vo.data-id}" data-title="{$vo.title}"> {$vo.title} </div>
+              </volist>
+            </div>
+          </div>
+        </div>
+        <php>}</php>
+      </div>
+      <script>
+            $(function () {
+                var flag = "{$field.name}"
+                $('#{$field.name}').kanbans({'drop': function () {
+                    var kanban =new Array();
+                    $('.kanbans .kanban').each(function (index, element) {
+                        if ($(element).data('id')) {
+                            kanban[index] =  new Object();
+                            kanban[index]['data-id'] =  $(element).data('id');
+                            kanban[index]['title'] =  $(element).data('title');
+                            kanban[index]['items'] =  new Array();
+                            var obj = $(element).find('.item');
+                            for (var i = 0; i < obj.length; i++) {
+                                kanban[index]['items'][i] = new Object();
+                                kanban[index]['items'][i]['data-id'] = $(obj[i]).data('id');
+                                kanban[index]['items'][i]['title'] = $(obj[i]).data('title');
+                            };
+                        }
+                    })
+                    var kanban_str = JSON.stringify(kanban);
+                    $('[name="'+flag+'"]').val(kanban_str);
+                }
+                })
+            })
+        </script> 
+    </case>
+    <case value="chosen">
+      <select name="{$field.name}[]" style="width: 400px" class="chosen-select" multiple="multiple">
+        <php>
+            if( key($field['opt']) === 0){
+        </php>
+        <volist name="field['opt']" id="option">
+          <php>
+                $selected = in_array(reset($option),$field['value'])? 'selected' : '';
+            </php>
+          <option value="{:reset($option)}" {$selected}>{$option|end|htmlspecialchars}</option>
+        </volist>
+        <php>
+            }else{
+            foreach($field['opt'] as $optgroupkey =>$optgroup){
+        </php>
+        <optgroup label="{$optgroupkey}">
+        <volist name="optgroup" id="option">
+          <php> $selected = in_array(reset($option),$field['value'])? 'selected' : '';</php>
+          <option value="{:reset($option)}" {$selected}>{$option|end|htmlspecialchars}</option>
+        </volist>
+        </optgroup>
+        <php>
+            }
+            }
+        </php>
+      </select>
+    </case>
+    <case value="multiInput">
+    
+        <php> $field['name'] = is_array($field['name'])?$field['name']:explode('|',$field['name']);
+          foreach($field['name'] as $key=>$val){ </php>
+        <switch name="field['config'][$key]['type']">
+          <case value="text">
+            <input type="text" name="{$val}" value="{$field['value'][$key]|htmlspecialchars}"  class=" pull-left text input-3 form-control" style="{$field['config'][$key]['style']}" placeholder="{$field['config'][$key]['placeholder']}"/>
+          </case>
+          <case value="select">
+            <select name="{$val}" class="pull-left form-control" style="{$field['config'][$key]['style']}" >
+              <php>foreach($field['config'][$key]['opt'] as $key_opt =>$option){</php>
+              <php> $selected = $field['value'][$key]==$key_opt ? 'selected' : ''; </php>
+              <option value="{$key_opt}"{$selected}>{$option|htmlspecialchars}</option>
+              <php>}</php>
+            </select>
+          </case>
+        </switch>
+        <php> } </php>
+   
+    </case>
+    <default/>
+    <span style="color: #f00;">错误：未知字段类型 {$field.type}</span>
+    <input type="hidden" name="{$field.name}" value="{$data[$field['name']]|htmlspecialchars}"/>
+  </switch>
+  <if condition="$field['subtitle']"> <span class="check-tips">（{$field.subtitle|htmlspecialchars}）</span> </if></td>

@@ -1,0 +1,56 @@
+<extend name="Base/common"/>
+<block name="body">
+
+
+
+<div class="am-container">
+<div data-am-widget="list_news" class="am-list-news am-list-news-default">
+  <!--列表标题-->
+  <div class="am-list-news-hd am-cf">
+      <h2>{$category.title}</h2>
+  </div>
+  <div class="am-list-news-bd">
+    <ul class="am-list new_list">
+      <!--缩略图在标题左边-->
+
+	 
+       <volist name="list" id="vo">
+      
+
+
+<empty name="vo[cover_id]">
+<li class="am-g am-list-item-desced">
+        <div class=" am-list-main">
+          <h3 class="am-list-item-hd">
+            <a href="{:U('article',array('id'=>$vo[id]))}">{:msubstr($vo[title],0,18)}</a>
+          </h3>
+          <div class="am-list-item-text" style="text-indent:2em">{$vo.description}</div>
+        </div>
+      </li>
+      <else/>
+      
+            <li class="am-g am-list-item-desced am-list-item-thumbed am-list-item-thumb-left">
+        <div class="am-u-sm-4 am-list-thumb">
+          <a href="{:U('article',array('id'=>$vo[id]))}">
+            <img src="{$vo.cover_id|get_cover='path'}" alt="{$vo.title}">
+          </a>
+        </div>
+        <div class=" am-u-sm-8 am-list-main">
+          <h3 class="am-list-item-hd">
+            <a href="{:U('article',array('id'=>$vo[id]))}">{:msubstr($vo[title],0,12)}</a>
+          </h3>
+          <div class="am-list-item-text" style="text-indent:2em">{$vo.description}</div>
+        </div>
+      </li>
+
+</empty>
+
+
+            </volist>
+      
+    </ul>
+  </div>
+</div>
+</div>
+
+</block>

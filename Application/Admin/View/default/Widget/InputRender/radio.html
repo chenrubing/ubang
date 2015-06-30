@@ -1,0 +1,9 @@
+<eq name="type" value="personal">
+  <tr>
+    <td><eq name="required" value="1"><span style="color: #FF0047;vertical-align: middle;">*&nbsp;&nbsp;</span></eq>  {$field_name} </td>
+    <td><volist name="items" id="vl">
+        <label class="radio" ><input  type="radio" name="expand_{$field_id}" value="{$vl.value}" {$vl.checked} >{$vl.value|htmlspecialchars}</label>
+      </volist>
+      <neq name="input_tips" value=""> <span class="check-tips">{$input_tips}</span></neq></td>
+  </tr>
+</eq>

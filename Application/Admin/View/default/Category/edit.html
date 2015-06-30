@@ -1,0 +1,178 @@
+<extend name="Public/base"/>
+<block name="body">
+  <div class="main-title">
+    <h2>栏目设置</h2>
+  </div>
+  <div class="with-padding">
+    <form action="{:U()}" method="post" class="form-horizontal" id="editsort">
+      <ul class="nav nav-secondary">
+        <li  class="active"><a href="#descrip" data-toggle="tab">基本设置</a></li>
+        <li><a href="#basic" data-toggle="tab">权限设置</a></li>
+        <li><a href="#template" data-toggle="tab">模板</a></li>
+        <li><a href="#seoset" data-toggle="tab">SEO设置</a></li>
+      </ul>
+      <div class="tab-content" style="margin-top:8px">
+        <div    class="tab-pane active" id="descrip">
+          <table width="100%" border="0" cellspacing="0" class="table  table-hover table-bordered">
+            <tr>
+              <td width="28%">父分类:</td>
+              <td width="72%"><a  data-toggle="modal" data-title="选择栏目" class="btn" data-remote="{:U('Select')}" id="CategoryName" >{$category['title']|default='顶级分类'}</a>
+                <input type="hidden"id="CategoryPid" name="pid" class="input-3" value="{:isset($category['id'])?$category['id']:$info['pid']}" ></td>
+            </tr>
+            <tr>
+              <td width="26%">栏目名称:</td>
+              <td width="74%"><input type="text" name="title" class="input-3" value="{$info.title|default=''}"></td>
+            </tr>
+            <tr>
+              <td width="26%">栏目唯一标识:</td>
+              <td width="74%"><input type="text" name="name" class="form-control input-2" value="{$info.name|default=''}">
+                <span class="check-tips">(建议填写栏目的英文名称)</span></td>
+            </tr>
+            <tr>
+              <td width="26%" >分类类型</td>
+              <td width="74%"><label class="radio inline">
+                  <input type="radio" name="ifpage" value="0"  checked>
+                  分类</label>
+                <label class="radio inline">
+                  <input type="radio" name="ifpage" value="1">
+                  单页</label></td>
+            </tr>
+            <tr>
+              <td>分类文章条数</td>
+              <td><input type="text" name="list_row" class="form-control input-1" value="{$info.list_row|default=10}"></td>
+            </tr>
+            <tr>
+              <td width="26%" >绑定文档模型</td>
+              <td width="74%"><volist name=":get_document_model()" id="list">
+                  <label class="checkbox">
+                    <input type="checkbox" name="model[]" value="{$list.id}">
+                    {$list.title} </label>
+                </volist></td>
+            </tr>
+            <tr>
+              <td width="26%" >分类图标 </td>
+                <td width="74%"><div data-toggle="upimg" name="icon" id="icon" title="请上传图片" maxnum="1" value="{$info.icon}" src="{$info[icon]|get_cover='path'}"></div></td>
+            </tr>
+          </table>
+        </div>
+        <div  class="tab-pane" id="basic">
+          <table width="100%" border="0" cellspacing="0" class="table  table-hover table-bordered ">
+            <tr>
+              <td width="26%" >允许文档类型</td>
+              <td width="74%"><volist name=":C('DOCUMENT_MODEL_TYPE')" id="type">
+                  <label class="checkbox">
+                    <input type="checkbox" name="type[]" value="{$key}">
+                    {$type} </label>
+                </volist></td>
+            </tr>
+            <tr>
+              <td width="26%" >是佛允许发布内容</td>
+              <td width="74%"><label class="radio inline">
+                  <input type="radio" name="allow_publish" value="0">
+                  不允许</label>
+                <label class="radio inline">
+                  <input type="radio" name="allow_publish" value="1" checked>
+                  仅允许后台</label>
+                <label class="radio inline">
+                  <input type="radio" name="allow_publish" value="2" >
+                  允许前后台</label></td>
+            </tr>
+            <tr>
+              <td width="28%">是否需要审核:</td>
+              <td width="72%"><label class="radio inline">
+                  <input type="radio" name="check" value="0" checked>
+                  不需要</label>
+                <label class="radio inline">
+                  <input type="radio" name="check" value="1">
+                  需要</label></td>
+            </tr>
+            <tr>
+              <td width="28%">可见性: </td>
+              <td width="72%"><label class="radio inline">
+                  <input type="radio" name="display" value="1" checked>
+                  所有人可见</label>
+                <label class="radio inline">
+                  <input type="radio" name="display" value="0">
+                  不可见</label>
+                <label class="radio inline">
+                  <input type="radio" name="display" value="2">
+                  管理员可见</label></td>
+            </tr>
+            <tr>
+              <td width="28%">是否允许评论:</td>
+              <td width="72%"><label class="radio inline">
+                  <input type="radio" name="reply" value="1" checked>
+                  允许</label>
+                <label class="radio inline">
+                  <input type="radio" name="reply" value="0">
+                  不允许</label></td>
+            </tr>
+          </table>
+        </div>
+        <div class="tab-pane" id="template" >
+          <table width="100%" border="0" cellspacing="0" class="table  table-hover table-bordered ">
+            <tr>
+              <td width="27%">频道模板:</td>
+              <td width="73%"><input type="text" name="template_index" class="input-5" value="{$info.template_index|default=''}"></td>
+            </tr>
+            <tr>
+              <td width="27%">列表模板:</td>
+              <td width="73%"><input type="text" name="template_lists" class="input-5" value="{$info.template_lists|default=''}"></td>
+            </tr>
+            <tr>
+              <td width="27%">详情模板:</td>
+              <td width="73%"><input type="text" name="template_detail" class="input-5" value="{$info.template_detail|default=''}"></td>
+            </tr>
+            <tr>
+              <td width="27%">编辑模板:</td>
+              <td width="73%"><input type="text" name="template_edit" class="input-5" value="{$info.template_edit|default=''}"></td>
+            </tr>
+          </table>
+        </div>
+        <div  class="tab-pane" id="seoset">
+          <table width="100%" border="0" cellspacing="0" class="table  table-hover table-bordered ">
+            <tr>
+              <td width="27%">SEO网页标题(title):</td>
+              <td width="73%"><input type="text" name="meta_title" class="input-5" value="{$info.meta_title|default=''}"></td>
+            </tr>
+            <tr>
+              <td width="27%">SEO栏目关键字(keywords):</td>
+              <td width="73%"><input type="text" name="keywords" class="input-5" value="{$info.keywords|default=''}"></td>
+            </tr>
+            <tr  class="nobr">
+              <td width="27%">SEO栏目描述(description):</td>
+              <td width="73%"><textarea  class="input-5" name="description">{$info.description|default=''}</textarea></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确定</button>
+        <a class="btn btn-return" href="{:U(index)}">返回</a>
+        <input type="hidden" name="id" value="{$info.id|default=''}">
+      </div>
+    </form>
+  </div>
+</block>
+<block name="script"> 
+  <script type="text/javascript">
+  
+		<present name="info.id">
+		Think.setValue("status", {$info.status|default=1});
+		Think.setValue("ifpage", {$info.ifpage|default=0});
+		Think.setValue("allow_publish", {$info.allow_publish|default=1});
+		Think.setValue("check", {$info.check|default=0});
+		Think.setValue("model[]", {$info.model|json_encode} || [1]);
+		Think.setValue("type[]", {$info.type|json_encode} || [2]);
+		Think.setValue("display", {$info.display|default=1});
+		Think.setValue("reply", {$info.reply|default=0});
+		Think.setValue("reply_model[]", {$info.reply_model|json_encode} || [1]);
+		</present>
+		$(function(){
+			$("input[name=reply]").change(function(){
+				var $reply = $(".form-item.reply");
+				parseInt(this.value) ? $reply.show() : $reply.hide();
+			}).filter(":checked").change();
+		});
+   </script> 
+</block>

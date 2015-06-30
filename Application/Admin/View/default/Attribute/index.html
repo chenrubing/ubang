@@ -1,0 +1,40 @@
+<extend name="Public/base"/>
+<block name="body">
+  <!-- 数据列表 -->
+  
+  <div class="main-title">
+    <h2> {:get_model_by_id($model_id)}属性列表(不含继承属性)</h2>
+  </div>
+  <div class="with-padding"> <a  data-remote="{:U('Attribute/add?model_id='.$model_id)}" data-toggle="modal" class="btn" href="javascript:void(0);" >新增</a> </div>
+   <div class="data-table with-padding">
+  <table width="100%" class="table table-hover table-bordered  table-striped " cellpadding="0"  cellspacing="0">
+    <thead>
+      <tr>
+        <th width="5%"><input class="check-all" type="checkbox"/></th>
+        <th width="8%">编号</th>
+        <th width="14%">字段</th>
+        <th width="36%">名称</th>
+        <th width="21%">数据类型</th>
+        <th width="16%">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <notempty name="_list">
+        <volist name="_list" id="vo">
+          <tr class="center">
+            <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}" /></td>
+            <td>{$vo.id} </td>
+            <td>{$vo.name}</td>
+            <td><a data-title="编辑字段" data-remote="{:U('Attribute/edit?id='.$vo['id'])}" data-toggle="modal" href="javascript:void(0);">{$vo.title}</a></td>
+            <td><span>{:get_attribute_type($vo['type'])}</span></td>
+            <td><a data-title="编辑字段" data-remote="{:U('Attribute/edit?id='.$vo['id'])}" data-toggle="modal" href="javascript:void(0);">[编辑]</a> <a class="confirm ajax-get" href="{:U('Attribute/remove?id='.$vo['id'])}">[删除]</a></td>
+          </tr>
+        </volist>
+        <else/>
+        <tr>
+          <td colspan="6" class="text-center"> aOh! 暂时还没有内容! </td>
+        </tr>
+      </notempty>
+    </tbody>
+  </table>
+  {$_page}</div> </block>

@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="__ZUI__/css/zui.css" rel="stylesheet">
+<link href="__STATIC__/cropper-master/css/cropper.css" rel="stylesheet">
+<script type="text/javascript" src="__STATIC__/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="__ZUI__/js/zui.js"></script>
+<script type="text/javascript" src="__JS__/common.js"></script>
+<script type="text/javascript" src="__JS__/upload.js"></script>
+<script type="text/javascript" src="__STATIC__/cropper-master/js/cropper.js"></script> 
+</head>
+<body style=" width:500px; height:500px;margin:0 auto">
+<form name="PicEdit" method="post" action='index.php?s=Admin/File/crop_upload.html' class="form-horizontal">
+  <div class="eg-wrapper"> <img class="cropper" src="__ROOT__{$picDB.path}?{$Rand}" alt="Picture"> </div>
+  
+  <!--预览图-->
+  <div class="clearfix" style="display:none">
+    <div class="preview preview-lg"></div>
+    <div class="preview preview-md"></div>
+    <div class="preview preview-sm"></div>
+    <div class="preview preview-xs"></div>
+  </div>
+    <div class="modal-iframe-footer">
+
+     <label>  <input name="IfLimit" type="radio" value="1" checked="checked"  onclick="$('.see').hide();"/> 限制剪裁</label>
+    <label  id="setRatioAuto" >  <input name="IfLimit" type="radio" value="0" onclick="$('.see').show();"/>  自由剪裁</label>
+    <span class=" see " style="display:none">宽:<span id="seewidth"></span>px 高:<span id="seeheight"></span>px </span>
+    <button class="btn" style="margin-left:10px" id="zoomIn" type="button"><i class="icon-plus-sign"></i> 放大</button>
+    <button class="btn" id="zoomOut" type="button"><i class="icon-minus-sign"></i> 缩小</button>
+     <button class="btn btn-warning" id="reset" type="button"><i class="icon-refresh"></i>复位</button>
+     <button type="button" class="btn btn-primary ajax-cutimg" url="index.php?s=Admin/File/crop_upload.html" target-form="form-horizontal" ><i class="icon-ok"></i>确定剪裁</button>
+  </div> 
+  <input value="{$picDB.path}" name="dataURL" type="hidden" />
+  <input class="form-control" id="dataX" name="dataX" type="hidden">
+  <input class="form-control" id="dataY" name="dataY" type="hidden">
+  <input class="form-control" id="dataWidth" name="dataW" type="hidden" >
+  <input class="form-control" id="dataHeight" name="dataH" type="hidden">
+</form>
+
+<script type="text/javascript">
+$(function() {
+  var $image = $(".cropper"),
+      $dataX = $("#dataX"),
+      $dataY = $("#dataY"),
+      $dataHeight = $("#dataHeight"),
+      $dataWidth = $("#dataWidth"),
+      console = window.console || {log:$.noop},
+      cropper;
+ 	$image.cropper({
+    aspectRatio: {$cur_scale},
+    // autoCropArea: 1,
+    preview: ".preview",
+    done: function(data) {
+      $dataX.val(data.x);
+      $dataY.val(data.y);
+      $dataHeight.val(data.height);
+      $dataWidth.val(data.width);
+	  $('#seewidth').html(parseInt(data.width));
+	  $('#seeheight').html(parseInt(data.height));
+    }
+  });
+
+  cropper = $image.data("cropper");
+  $("#setRatioAuto").click(function() {
+    $image.cropper("setAspectRatio", "auto");
+  });
+  $("#reset").click(function() {
+    $image.cropper("reset", true);
+  });
+  $("#zoomIn").click(function() {
+    $image.cropper("zoom", 0.1);
+  });
+  $("#zoomOut").click(function() {
+    $image.cropper("zoom", -0.1);
+  });
+});
+
+
+</script>
+</body>
+</html>

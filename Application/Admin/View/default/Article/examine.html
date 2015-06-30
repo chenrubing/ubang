@@ -1,0 +1,43 @@
+<extend name="Public/base" />
+<block name="body">
+   <div class="main-title">
+    <h2>待审核({:count($list)})</h2>
+  </div>
+ 
+  <div class="with-padding">
+    <button url="{:U('article/setStatus?status=1')}" class="btn ajax-post" target-form="ids"><i class="glyphicon glyphicon-eye-open"></i>审核选中</button>
+    <button class="btn btn-warning ajax-post confirm" target-form="ids" url="{:U("Article/setStatus",array("status"=>-1))}"><i class="glyphicon glyphicon-trash"></i>删除选中</button>
+  </div>
+  
+  <!-- 数据列表 -->
+  <div class="data-table with-padding">
+  <table width="100%"  cellpadding="0" cellspacing="0" class="table  table-hover table-bordered ">
+    <thead>
+      <tr>
+        <th width="4%"><input class="check-all" type="checkbox"/></th>
+        <th width="4%">编号</th>
+        <th width="42%">标题</th>
+        <th width="10%">创建者</th>
+        <th width="5%">类型</th>
+        <th width="10%">分类</th>
+        <th width="10%">发布时间</th>
+        <th width="9%">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <volist name="list" id="vo">
+        <tr>
+          <td><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}" /></td>
+          <td>{$vo.id} </td>
+          <td><a href="{:U('Article/edit?cate_id='.$vo['category_id'].'&id='.$vo['id'])}">{$vo.title}</a></td>
+          <td>{$vo.username} </td>
+          <td><span>{:get_document_type($vo['type'])}</span></td>
+          <td><span>{:get_cate($vo['category_id'])}</span></td>
+          <td><span>{$vo.create_time|time_format}</span></td>
+          <td><a href="{:U('Article/edit?cate_id='.$vo['category_id'].'&id='.$vo['id'])}">[编辑]</a> <a href="{:U('Article/setStatus?ids='.$vo['id'].'&status=1')}" class="ajax-get">[审核]</a> <a href="{:U('Article/setStatus?status=-1&ids='.$vo['id'])}" class="confirm ajax-get">[删除]</a></td>
+        </tr>
+      </volist>
+    </tbody>
+  </table>
+  
+  {$_page} </div></block>

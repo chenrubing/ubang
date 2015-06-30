@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html lang="">
+<head>
+<meta charset="UTF-8">
+<title>FrozenUI - 专注于移动web的UI框架</title>
+<meta name="Description" content="专注于移动web的UI框架，基于手机QQ规范" />
+<meta name="Keywords" content="frozen，frozenui，frozenjs，forzen ui，forzen js" />
+<meta name="author" content="fayching" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link type="image/x-icon" href="http://frozenui.github.io/static/favicon.ico" rel="icon">
+<!--统计代码 -->
+<!-- <link rel="stylesheet" type="text/css" href="http://i.gtimg.cn/vipstyle/frozenui/1.2.1/css/global.css?_bid=306"/> -->
+<link rel="stylesheet" type="text/css" href="__UI__/frozenui/1.2.1/css/global.css">
+<link rel="stylesheet" type="text/css" href="__CSS__/app.css">
+<!-- <script src="http://i.gtimg.cn/vipstyle/frozenjs/lib/zepto.min.js?_bid=304"></script>
+        <script src="http://i.gtimg.cn/vipstyle/frozenjs/1.0.1/frozen.js?_bid=304"></script> -->
+<script src="__UI__/frozenjs/lib/zepto.min.js"></script>
+<script src="__UI__/frozenjs/1.0.1/frozen.js"></script>
+<script src="__JS__/jquery-2.0.3.min.js"></script>
+<script src="__JS__/ajax.js"></script>
+</head>
+<body>
+<header><a class="head_back" onClick="history.go(-1);">返回</a> 家居服务 </header>
+<div class="icon-dopost margin-top-sm"></div>
+<h1 class="center margin-sm">选择需求种类</h1>
+<ul class="ui-list ui-list-text ui-list-link ui-border-b postCategory  animation-slide-bottom">
+  <volist name="Category" id="vo">
+    <li class="ui-border-t  animation-slide-bottom animation-delay-{$i}"> <span></span> 
+    <empty name="vo[is_son]">
+    	<a onclick="return yanzheng({$vo[id]})" href="{:U('user_post',array('id'=>$vo[id]))}">{$vo.title}</a>
+    <else/>
+    	<a href="{:U('category',array('id'=>$vo[id]))}">{$vo.title}</a>
+    </empty>
+    </li>
+  </volist>
+</ul>
+
+
+<footer>
+  <li><a href="#"><span class="f1"  href="#"></span><i>首页</i></a></li>
+  <li><a href="#"><span class="f2"  href="#"></span><i>发需求</i></a></li>
+  <li><a href="#"><span class="f3"  href="#"></span><i>找服务</i></a></li>
+  <li><a href="#"><span class="f4"  href="#"></span><i>我的</i></a></li>
+  </ul>
+
+</footer>
+
+<script>
+function yanzheng(id)
+{
+  var bll=false;
+  $.ajax({
+     async:false,
+     type: 'POST',
+     url: '{:U('cateif')}',
+     data :"id="+id,
+     dataType:'json',
+    success: function(json){
+      if(json['status']==0){
+        alert(json['info']);
+      }
+      else{
+        bll = true;
+      }
+    }
+  });
+  return bll;
+
+}
+window.addEventListener('load', function(){
+
+    var slider = new fz.Scroll('.ui-slider', {
+
+        role: 'slider',
+
+        indicator: true,
+
+        autoplay: false,
+
+        interval: 13000
+
+    });
+
+    slider.on('beforeScrollStart', function(fromIndex, toIndex) {
+
+        console.log(fromIndex,toIndex)
+
+    });
+
+
+
+    slider.on('scrollEnd', function() {
+
+        console.log('end')
+
+    });
+
+})
+
+</script>
+
+</body>
+

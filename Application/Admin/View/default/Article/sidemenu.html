@@ -1,0 +1,193 @@
+<block name="sidebar">
+       <div class="sub_menu_wrapper" style="background: rgb(245, 246, 247); bottom: -10px;top: 0;position: absolute;width: 180px;overflow: auto">
+                <div>
+                     
+<nav id="sub_menu" class="menu" data-toggle="menu">
+                        <ul class="nav nav-primary">
+                                <!--     <notempty name="_extra_menu">
+                                         {// 动态扩展菜单 //}
+                                         {:extra_menu($_extra_menu,$__MENU__)}
+                                     </notempty>-->
+                                <volist name="__MENU__.child" id="sub_menu">
+                                    <!-- 子导航 -->
+                                    <notempty name="sub_menu">
+                                        <li class="show">
+                                            <a href="#">
+                                                <notempty name="key">{$key}</notempty>
+                                            </a>
+                                            <ul class="nav">
+                                                <volist name="sub_menu" id="menu">
+                                                    <li>
+                                                        <a href="{$menu.url|U}">{$menu.title}</a>
+                                                    </li>
+                                                </volist>
+                                            </ul>
+                                        </li>
+                                    </notempty>
+                                    <!-- /子导航 -->
+                                </volist>
+                                
+                        </ul>
+                    </nav>     </div></div>
+<style>
+.CategoryNav{background:#f6f6f6; height:100% ; position:absolute;left:180px; width:180px;top:10px; border-right:1px solid #ddd;}
+.CategoryNav .breadcrumb{ margin-bottom:0px}
+#selectBox{display:none; position: absolute; left:0px;top:36px; z-index:999999;}
+#selectBox .ztree{ width:300px; height:300px; overflow:auto}
+#main-content{left:360px}
+</style>
+
+        
+ <div class="CategoryNav">
+ <div class="main-title">
+    <h2>请选择分类</h2>
+  </div>   
+  <ul id="Category_tree" class="ztree" style="padding:5px 10px">
+  </ul>
+</div>  
+<SCRIPT type="text/javascript">
+
+
+  $('body').css('padding-left','360px');
+		var demoMsg = {
+			async:"正在后台加载，请稍后...",
+			expandAllOver: "全部展开完毕", 
+			expandAll: "已经是全部展开了"
+		}
+		var setting = {
+		<if condition="C('CATEGORY_JSON') eq 0">
+			data: {
+				simpleData: {enable: true},
+				key: {title: "id"}
+			},
+		</if>
+			async: {
+				enable: true,
+				url: "{:U('GetJson')}",
+				autoParam: ["id", "name=n", "level=lv"],
+				otherParam: {"otherParam": "zTreeAsyncTest"},
+				type: "get"
+			},
+			view: {
+				dblClickExpand: false
+			},
+			callback: {
+				beforeAsync: beforeAsync,
+				onAsyncSuccess: onAsyncSuccess,
+				onAsyncError: onAsyncError
+			}
+		};
+	<if condition="C('CATEGORY_JSON') eq 0">
+	var zNodes =[
+		     <volist name="tree" id="vo">
+			   { id:"{$vo.id}", pId:"{$vo.pid}", name:"{$vo.title}", status:"{$vo.status}",url:'__URL__/index/cate_id/{$vo.id}.html', target:'_self' , open:true} <if condition="$i neq count($alist)">,</if>
+			</volist>
+	];
+	</if>
+		
+
+
+		function beforeAsync() {
+			curAsyncCount++;
+		}
+		
+		function onAsyncSuccess(event, treeId, treeNode, msg) {
+			curAsyncCount--;
+			if (curStatus == "expand") {
+				expandNodes(treeNode.children);
+			} else if (curStatus == "async") {
+				asyncNodes(treeNode.children);
+			}
+
+			if (curAsyncCount <= 0) {
+				if (curStatus != "init" && curStatus != "") {
+					art.dialog.tips(demoMsg.expandAllOver,'1');
+					asyncForAll = true;
+				}
+				curStatus = "";
+			}
+		}
+
+		function onAsyncError(event, treeId, treeNode, XMLHttpRequest, textStatus, errorThrown) {
+			curAsyncCount--;
+
+			if (curAsyncCount <= 0) {
+				curStatus = "";
+				if (treeNode!=null) asyncForAll = true;
+			}
+		}
+
+		var curStatus = "init", curAsyncCount = 0, asyncForAll = false,
+		goAsync = false;
+		function expandAll() {
+			if (!check()) {
+				return;
+			}
+			var zTree = $.fn.zTree.getZTreeObj("Category_tree");
+			if (asyncForAll) {
+				art.dialog.tips(demoMsg.expandAll,'1');
+				zTree.expandAll(true);
+			} else {
+				expandNodes(zTree.getNodes());
+				if (!goAsync) {
+					art.dialog.tips(demoMsg.expandAll,'1');
+					curStatus = "";
+				}
+			}
+		}
+		function expandNodes(nodes) {
+			if (!nodes) return;
+			curStatus = "expand";
+			var zTree = $.fn.zTree.getZTreeObj("Category_tree");
+			for (var i=0, l=nodes.length; i<l; i++) {
+				zTree.expandNode(nodes[i], true, false, false);
+				if (nodes[i].isParent && nodes[i].zAsync) {
+					expandNodes(nodes[i].children);
+				} else {
+					goAsync = true;
+				}
+			}
+		}
+
+		function asyncNodes(nodes) {
+			if (!nodes) return;
+			curStatus = "async";
+			var zTree = $.fn.zTree.getZTreeObj("Category_tree");
+			for (var i=0, l=nodes.length; i<l; i++) {
+				if (nodes[i].isParent && nodes[i].zAsync) {
+					asyncNodes(nodes[i].children);
+				} else {
+					goAsync = true;
+					zTree.reAsyncChildNodes(nodes[i], "refresh", true);
+				}
+			}
+		}
+
+		function reset() {
+			if (!check()) {
+				return;
+			}
+			asyncForAll = false;
+			goAsync = false; 
+				art.dialog.tips('重载完毕','1');
+			$.fn.zTree.init($("#Category_tree"), setting);
+		}
+
+		function check() {
+			if (curAsyncCount > 0) {
+				art.dialog.tips(demoMsg.async,'1');
+				return false;
+			}
+			return true;
+		}
+
+		$(document).ready(function() {
+			$("#expandAllBtn").bind("click", expandAll);
+			$("#resetBtn").bind("click", reset);
+			$.fn.zTree.init($("#Category_tree"), setting <if condition="C('CATEGORY_JSON') eq 0">,zNodes</if>);
+			//为当前增加选中效果
+  	 		$("#Category_tree [title={$cate_id}]").addClass('curSelectedNode');
+		});
+	</SCRIPT> 
+  
+     </block>

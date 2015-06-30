@@ -1,0 +1,101 @@
+<!-- 管理员用户组新增和编辑页面 -->
+
+<extend name="Public/base" />
+<block name="body">
+  <div class="main-title">
+    <h2>默认头衔配置</h2>
+  </div>
+  <div class="tab-wrap">
+    <div class="clearfix  with-padding">
+      <div class="pull-left"> <include file="_link"/> </div>
+      <div class="pull-right">
+        <select name="role" class="form-control">
+          <volist name="role_list" id="vo">
+           <option value="{:U('Role/configScore',array('id'=>$vo['id']))}"     <eq name="vo['id']" value="$this_role['id']">selected</eq>  >{$vo.title} 
+            
+            </option>
+          </volist>
+        </select>
+      </div>
+    </div>
+  </div>
+  <form action="__SELF__" enctype="application/x-www-form-urlencoded" method="POST" class="form-horizontal with-padding">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered table-hover">
+      <notempty name="can_apply">
+        <tr>
+          <td width="12%">用户可申请头衔</td>
+          <td width="1%"><label class="checkbox">
+              <input class="auth_rank rank_all" type="checkbox">
+            </label></td>
+          <td width="87%"><volist name="can_apply" id="rank" >
+              <label class="checkbox" title="id：{$rank['id']}  创建人：{$rank['name']}  创建时间：{$rank['create_time']|time_format='Y-m-d'}">
+                <input class="auth_rank rank_row" type="checkbox" name="ranks[]" value="{$rank['id']}"/>
+                {$rank['title']}</label>
+            </volist></td>
+        </tr>
+      </notempty>
+      <notempty name="un_apply">
+        <tr>
+          <td>用户不可申请头衔</td>
+          <td><label class="checkbox">
+              <input class="auth_rank rank_all" type="checkbox">
+            </label></td>
+          <td><volist name="un_apply" id="rank" >
+              <label class="checkbox" title="id：{$rank['id']}  创建人：{$rank['name']}  创建时间：{$rank['create_time']|time_format='Y-m-d'}">
+                <input class="auth_rank rank_row" type="checkbox" name="ranks[]" value="{$rank['id']}"/>
+                {$rank['title']}</label>
+            </volist></td>
+        </tr>
+      </notempty>
+        <if condition="count($un_apply)||count($can_apply)">
+      
+      <tr>
+        <td>头衔颁发原因</td>
+        <td colspan="2"><textarea name="reason" style="width: 500px;min-height: 100px;">{$reason}</textarea></td>
+      </tr>
+       <else/>
+       <tr>
+       <td>
+    <div class="alert  alert-warning"> 请先到 用户 -> 头衔管理 -> 头衔列表 -> <a href="{:U('admin/rank/editrank')}" target="_blank" title="立刻去添加头衔" >添加头衔</a></div>
+    </td>
+    </tr>
+    </if>
+    </table>
+   
+    <div class="buttons">
+      <input type="hidden" name="id" value="{$this_role.id}" />
+      <button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+  </div>
+  </div>
+  </div>
+</block>
+<block name="script"> 
+  <script type="text/javascript" charset="utf-8">
+     +function($){
+            var ranks = [{$this_role.ranks}];
+        $('.auth_rank').each(function(){
+            if( $.inArray( parseInt(this.value,10),ranks )>-1 ){
+                $(this).prop('checked',true);
+            }
+            if(this.value==''){
+                $(this).closest('span').remove();
+            }
+        });
+
+        //全选节点
+        $('.rank_all').on('change',function(){
+            $(this).closest('tr').find('td').find('input').prop('checked',this.checked);
+        });
+    
+
+        $('select[name="role"]').change(function(){
+            location.href = this.value;
+        });
+        //导航高亮
+        highlight_subnav('{:U('Role/configrank')}');
+        }(jQuery);
+    </script> 
+</block>

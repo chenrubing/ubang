@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<script src="__Public__/js/jquery-1.10.2.min.js"></script>
+
+<title>无标题文档</title>
+
+<style >
+
+select{
+
+    -webkit-appearance: none;
+
+    -moz-appearance: none;
+
+    -ms-appearance: none;
+
+    appearance: none;}
+
+</style>
+
+</head>
+
+
+
+<body>
+
+<form action="" enctype="multipart/form-data" method="post">
+
+    需求标题：<input name="title" type="text" /><br/>
+
+    需求图片：<br/>
+
+    需求分类：<select class="cid ld" name="cid">
+
+                <volist name="list" id="vo">
+
+                <option value="{$vo.id}">{$vo.title}</option>
+
+                </volist>
+
+                </select>
+
+                <br/>
+
+    需求详情：<textarea class="content" name="content" cols="10" rows="5"></textarea><br/>
+
+    期望出价：<input name="price" type="text" /><br/>
+
+    期望解决时间：<input name="time" type="text" /><br/>
+
+   
+
+    <input class="but" name="" value="提交" type="button" />
+
+</form>
+
+
+
+<script type="text/javascript">
+
+    $(function(){
+
+        $(".cid").change(function(e) {
+
+            var pid=$(this).val();
+
+            $(this).nextAll(".ld").remove().remove();
+
+            $.ajax({
+
+               type: "POST",
+
+               url: "index.php?s=/App/Api/fenlei",
+
+               data: "pid="+pid,
+
+               success: function(msg){
+
+                 if(msg['status']=="1"){
+
+                    var ht='<select class="cid1 ld" name="cid">';
+
+                    $.each(msg['data'],function(key,val){
+
+                        ht=ht+'<option value="'+val['id']+'">'+val['title']+'</option>';
+
+                    });
+
+                    ht=ht+"</select>";
+
+                    $(".ld").last().after(ht);
+
+                 }
+
+               },
+
+            });
+
+
+
+        });
+
+
+
+    /*  $(".cid1").on("change",function(e) {
+
+            alert("111");
+
+        });  
+
+    */
+
+        $(document).on("change",".cid1",function(){
+            var pid=$(this).val();
+
+            $(this).nextAll(".ld").remove();
+
+            $.ajax({
+
+               type: "POST",
+
+               url: "index.php?s=/App/Api/fenlei",
+
+               data: "pid="+pid,
+
+               success: function(msg){
+
+                 if(msg['status']=="1"){
+
+                    var ht='<select class="cid2 ld" name="cid">';
+
+                    $.each(msg['data'],function(key,val){
+
+                        ht=ht+'<option value="'+val['id']+'">'+val['title']+'</option>';
+
+                    });
+
+                    ht=ht+"</select>";
+
+                    $(".ld").last().after(ht);
+
+                 }
+
+               },
+
+            });
+
+        })
+
+
+
+
+
+         $(".but").click(function(e) {
+
+            var title=$("input[name='title']").val();
+
+            var cid=$(".ld option:selected").last().val();
+
+            var content=$(".content").val();
+
+            var price=$("input[name='price']").val();
+
+            var time=$("input[name='time']").val();
+
+
+
+            $.ajax({
+
+               type: "POST",
+
+               url: "index.php?s=/App/Api/desired",
+
+               data: "title="+title+"&cid="+cid+"&content="+content+"&price="+price+"&time="+time,
+
+               success: function(msg){
+
+                    if(msg['status']=="1")
+
+                    {
+
+                        alert("添加成功！");
+
+                    }
+
+                    else
+
+                    {
+
+                        alert(msg['info']);
+
+                    }
+
+               },
+
+            });
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+    })
+
+
+
+</script>
+
+
+
+</body>
+
+</html>
+

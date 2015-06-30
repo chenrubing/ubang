@@ -1,0 +1,94 @@
+<div  class="am-navbar am-cf am-navbar-default footlist">
+  <ul class="am-navbar-nav am-cf am-avg-sm-4">
+    <li> <a href="{:U('Home/index/index')}"> <span class="am-icon-home"></span> <span class="am-navbar-label">首页</span> </a> </li>
+    <li> <a href="{:U('Home/index/category')}"> <span class="am-icon-th"></span> <span class="am-navbar-label">全部分类</span> </a> </li>
+    <li> <a href="{:U('Home/car/index')}"> <span class="am-icon-shopping-cart"></span> <span class="am-navbar-label">购物车</span>
+     <notempty  name="CarNum"><span class="am-badge am-badge-danger am-round shopcar">{$CarNum}</notempty></a> </li>
+     
+
+     
+    <li> <a href="javascript:void(0);" data-am-modal="{target: '#my-shop'}"> <span class="am-icon-cny"></span> <span class="am-navbar-label">我的微店</span> </a> </li>
+    
+
+    
+    <li> <a href="javascript:void(0);" data-am-modal="{target: '#my-info'}"> <span class="am-icon-user"></span> <span class="am-navbar-label">个人中心</span> <notempty  name="Message"><span class="am-badge am-badge-danger am-round shopcar">{$Message}</span></notempty></a> </li>
+  </ul>
+</div>
+
+
+
+<div class="am-modal-actions" id="my-info">
+   <img style="margin:0 auto; " src="<php>echo M('Avatar')->where(array('uid'=>is_login()))->getField('path');</php>" width="100" class="am-circle">
+   <div style="text-align:center; color:#FFF; margin:5px">{:get_nickname(is_login())}</div>
+  <div class="am-modal-actions-group">
+    <ul class="am-list">
+	<if condition="is_login()">
+
+   
+         <li><a href="{:U('ucenter/Config/index')}"><i class="am-icon-user"></i> 修改资料</a> </li>
+        <li><a href="{:U('ucenter/index/Collection')}"><i class="am-icon-diamond"></i> 我的收藏</a> </li>
+  		  <li><a href="{:U('ucenter/index/order')}"><i class="am-icon-cart-arrow-down"></i> 我的订单</a></li>
+        <li><a href="{:U('ucenter/index/messages')}"><i class="am-icon-envelope-o"></i> 我的消息</a></li>
+        <li><a href="{:U('ucenter/index/red')}"><i class="am-icon-yen"></i> 我的红包</a></li>
+        <li><a href="{:U('Ucenter/member/logout')}" class="ajax-get"><i class="am-icon-user-times"></i> 退出登陆</a></li>
+        <else/>
+        <li><a href="{:U('Ucenter/member/login')}"><i class="am-icon-hotel"></i> 会员登录</a></li>
+        <li><a href="{:U('Ucenter/member/register/type/mobile')}"><i class="am-icon-user-times"></i> 免费注册</a></li>
+      </if>
+    </ul>
+  </div>
+  <div class="am-modal-actions-group">
+    <button class="am-btn am-btn-secondary am-btn-block" data-am-modal-close>取消</button>
+  </div>
+</div>
+
+
+<div class="am-modal-actions" id="my-shop">
+  <div class="am-modal-actions-group">
+    <ul class="am-list">
+        <li><a href="{:U('ucenter/shop/index')}"><i class="am-icon-bar-chart"></i> 微店信息总览</a> </li>
+         <li><a href="{:U('ucenter/shop/config')}"><i class="am-icon-wrench"></i> 微店设置</a> </li>
+        <li><a href="{:U('ucenter/shop/user')}"><i class="am-icon-users"></i> 代理用户</a> </li>
+  		<li><a href="{:U('ucenter/shop/order')}"><i class="am-icon-pie-chart"></i> 代理订单</a></li>
+        <li><a href="{:U('ucenter/shop/cash')}"><i class="am-icon-jpy"></i> 佣金提现</a></li>
+        <li><a href="{:U('Ucenter/Post/index',array('site_id'=>is_login()))}"><i class="am-icon-yelp"></i> 红包推广</a></li>
+ 
+    </ul>
+  </div>
+  <div class="am-modal-actions-group">
+    <button class="am-btn am-btn-secondary am-btn-block" data-am-modal-close>取消</button>
+  </div>
+</div>
+
+
+<footer data-am-widget="footer" class="am-footer am-footer-default" data-am-footer="{  }">
+<!--  <div class="am-footer-switch"> <span class="am-footer-ysp" data-rel="mobile" data-am-modal="{target: '#am-switch-mode'}">云适配版</span> <span class="am-footer-divider">|</span> <a id="godesktop" data-rel="desktop" class="am-footer-desktop"
+    href="javascript:">电脑版</a> </div> -->
+  <div class="am-footer-miscs ">
+    <p>由 <a href="http://www.jnydkj.cn" title="赢德科技" target="_blank">赢德科技</a> 提供技术支持</p>
+    <p>CopyRight©2015 jnydkj.cn.</p>
+  </div>
+</footer>
+<div id="am-footer-modal" class="am-modal am-modal-no-btn am-switch-mode-m am-switch-mode-m-default">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd am-modal-footer-hd"> <a href="javascript:void(0)" data-dismiss="modal" class="am-close am-close-spin "
+      data-am-modal-close>&times;</a> </div>
+    <div class="am-modal-bd">您正在浏览的是 <span class="am-switch-mode-owner">云适配</span> <span class="am-switch-mode-slogan">为您当前手机订制的移动网站。</span> </div>
+  </div>
+</div>
+
+{:C('COUNT_CODE')} <include file="Public/js"/>
+<block name="script"><!-- 用于加载js代码 --></block>
+
+<php>if(session('form_uid')){</php>
+<!--佣金提示-->
+<script type="text/javascript">
+ 	  updateAlert('注册即获得{:shopCofing('red')}元红包，快来注册吧', 'success');
+</script>
+<php>}</php>
+
+<!-- 页面footer钩子，一般用于加载插件JS文件和JS代码 --> 
+{:hook('pageFooter', 'widget')}
+<div class="hidden"><!-- 用于加载统计代码等隐藏元素 -->
+  <block name="hidden"></block>
+</div>

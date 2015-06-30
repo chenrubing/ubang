@@ -1,0 +1,6 @@
+*{ margin:0px; padding:0px;}
+body{ margin:0px; padding:0px; background:#f5f5f5}
+.am-article-bd p{ margin:0px}
+
+.new_list.am-list>li{ background:none}
+.cms_content img,.cms_content p img,.cms_content tabel img{ max-width:100%}

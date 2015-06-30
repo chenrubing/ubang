@@ -1,0 +1,80 @@
+<block name="body">
+  
+  <!-- 修改密码表单 -->
+  
+  <form action="{:U('updateHook')}" method="post" class="form-horizontal">
+    <table width="100%"  cellpadding="0" cellspacing="0" class="table  table-bordered ">
+      <tr>
+        <td width="27%">钩子名称</td>
+        <td width="73%"><input type="text" value="{$data.name}" name="name" class="text input-large">
+          <span class="check-tips">（要在程序中先添加钩子）</span></td>
+      </tr>
+      <tr>
+        <td>钩子描述</td>
+        <td><textarea class="textarea input-4" name="description" >{$data.description}</textarea></td>
+      </tr>
+      <tr>
+        <td>钩子类型</td>
+        <td><select name="type">
+            <volist name=":C('HOOKS_TYPE')" id="vo"> <option value="{$key}"   
+              
+              <eq name="data.type" value="$key"> selected</eq>
+              >{$vo}  
+              
+              </option>
+            </volist>
+          </select>
+          <span class="check-tips">（区分钩子的主要用途）</span></td>
+      </tr>
+      <present name="data">
+        <tr>
+          <td> 钩子挂载的插件排序</td>
+          <td><div id="drag-container" class="controls" style="position:relative;">
+              <input type="hidden" name="addons" value="{$data.addons}" style="width: 100%" readonly>
+              <script>
+                            $(function(){
+                                function updateVal() {
+                                    var sortVal = [];
+                                    $('#hook_sort .kanban-item').each(function(){
+                                        if(typeof $(this).data('id') != 'undefined'){
+                                            sortVal.push($(this).data('id'));
+                                        }
+
+                                    });
+                                    $("input[name='addons']").val(sortVal.join(','));
+
+                                }
+                                $('#hook_sort').kanbans({'drop':updateVal});
+                            })
+                        </script>
+              <empty name="data.addons"> 暂无插件，无法排序
+                <else />
+                <div id="hook_sort" class="kanbans">
+                  <div class="kanban panel" data-id="addons">
+                    <div class="panel-heading"> <strong>插件排序</strong> </div>
+                    <div class="panel-body">
+                      <div class="kanban-list">
+                        <volist name=":explode(',',$data['addons'])" id="addons_vo">
+                          <div class="kanban-item" data-id="{$addons_vo}"> {$addons_vo} </div>
+                        </volist>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <span class="check-tips">（影响同一个钩子挂载的插件执行先后顺序）</span> </empty>
+            </div>
+      </present>
+      </td>
+      
+      </tr>
+      
+      </present>
+      
+    </table>
+<div class="modal-ajax-footer">
+      <input type="hidden" name="id" value="{$data.id}">
+      <button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确定</button>
+    </div>
+  </form>
+  </div>
+</block>

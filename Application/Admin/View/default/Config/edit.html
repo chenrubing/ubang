@@ -1,0 +1,72 @@
+<extend name="Public/base"/>
+<block name="body">
+  <div class="main-title">
+    <h2>编辑配置</h2>
+  </div>
+  <div class="with-padding">
+    <form action="{:U()}" method="post"  class="form-horizontal">
+      <table width="100%" border="0" class="table  table-hover table-bordered ">
+        <tr >
+          <td width="20%">配置标识</td>
+          <td width="80%"><input type="text" class="text input-3" name="name" value="{$info.name|default=''}">
+            <span class="check-tips">(用于C函数调用，只能使用英文且不能重复)</span></td>
+        </tr>
+        <tr>
+          <td>配置标题</td>
+          <td><input type="text" class="text input-4" name="title" value="{$info.title|default=''}">
+            <span class="check-tips">(用于后台显示的配置标题)</span></td>
+        </tr>
+        <tr>
+          <td>排序</td>
+          <td><input type="text" class="text input-1" name="sort" value="{$info.sort|default=0}">
+            <span class="check-tips">(用于分组显示的顺序)</span></td>
+        </tr>
+        <tr>
+          <td>配置类型</td>
+          <td><select name="type">
+              <volist name="Think.config.CONFIG_TYPE_LIST" id="type">
+                <option value="{$key}">{$type}</option>
+              </volist>
+            </select>
+            <span class="check-tips">(系统会根据不同类型解析配置值)</span></td>
+        </tr>
+        <tr>
+          <td>配置分组</td>
+          <td><select name="group">
+              <option value="0">不分组</option>
+              <volist name="Think.config.CONFIG_GROUP_LIST" id="group">
+                <option value="{$key}">{$group}</option>
+              </volist>
+            </select>
+            <span class="check-tips">(配置分组 用于批量设置 不分组则不会显示在系统设置中)</span></td>
+        </tr>
+        <tr>
+          <td>配置值</td>
+          <td><textarea name="value" class="input-4">{$info.value|default=''}</textarea></td>
+        </tr>
+        <tr>
+          <td>配置项</td>
+          <td><textarea name="extra" class="input-4">{$info.extra|default=''}</textarea>
+            <span class="check-tips">(如果是枚举型需要配置该项)</span></td>
+        </tr>
+        <tr>
+          <td>配置详细说明</td>
+          <td><textarea name="remark" class="input-4">{$info.remark|default=''}</textarea></td>
+        </tr>
+      </table>
+   
+      <input type="hidden" name="id" value="{$info.id|default=''}">
+         <div class="buttons"><a class="btn ajax-post btn-primary" href="{:U()}" target-form="form-horizontal" >提交</a>
+        <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返回</button>
+      </div>
+    </form>
+  </div>
+  </block>
+<block name="script">
+	<script type="text/javascript">
+		Think.setValue("type", {$info.type|default=0});
+		Think.setValue("group", {$info.group|default=0});
+		//导航高亮
+		highlight_subnav('{:U('Config/index')}');
+	</script>
+</block>

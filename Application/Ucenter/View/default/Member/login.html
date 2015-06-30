@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html lang="">
+<head>
+<meta charset="UTF-8">
+<title>FrozenUI - 专注于移动web的UI框架</title>
+<meta name="Description" content="专注于移动web的UI框架，基于手机QQ规范" />
+<meta name="Keywords" content="frozen，frozenui，frozenjs，forzen ui，forzen js" />
+<meta name="author" content="fayching" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link type="image/x-icon" href="http://frozenui.github.io/static/favicon.ico" rel="icon">
+<!--统计代码 -->
+<!-- <link rel="stylesheet" type="text/css" href="http://i.gtimg.cn/vipstyle/frozenui/1.2.1/css/global.css?_bid=306"/> -->
+<link rel="stylesheet" type="text/css" href="__UI__/frozenui/1.2.1/css/global.css">
+<link rel="stylesheet" type="text/css" href="__CSS__/app.css">
+<link rel="stylesheet" type="text/css" href="__CSS__/zui.min.css">
+<!-- <script src="http://i.gtimg.cn/vipstyle/frozenjs/lib/zepto.min.js?_bid=304"></script>
+        <script src="http://i.gtimg.cn/vipstyle/frozenjs/1.0.1/frozen.js?_bid=304"></script> -->
+<script src="__JS__/jquery.min.js"></script>
+<script src="__JS__/zui.min.js"></script>
+<script src="__JS__/ajax.js"></script>
+</head>
+<body>
+<header><a class="head_back" onClick="history.go(-1);">返回</a> 家居服务 <a class="head_search" href="{:U('Ucenter/member/register')}"><i class="f4">注册</i></a></header>
+<link rel="stylesheet" type="text/css" href="__CSS__/amazeui.min.css">
+
+ <div class="header">
+    <div class="am-g am-text-center am-padding-top"> <span  class="am-icon-btn am-secondary am-icon-mobile am-icon-md am-icon-btn-lg am-margin-bottom" style="background:#F60; border:1px solid #F30"></span> <br/>
+      绑定手机需要验证您的手机号码 <br/>
+      验证成功后即可自动登陆系统 </div>
+    <hr />
+  </div>
+  <div class="am-g">
+    <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
+   <form  method="post" class="am-form">
+       <div class="am-margin-vertical">
+      <label for="username">手机:</label>
+      <input type="text" class="form-control" id="username"  placeholder="请输入手机号"  name="username">
+      </div>
+      <div class="am-margin-vertical">
+        <label for="password">密码:</label>
+         <div class="input-group"> <span class="input-group-addon">验证码</span>
+              <input type="text" class="form-control" placeholder="验证码" name="reg_verify" >
+              <span class="input-group-btn">
+              <a class="btn btn-default" id="btnSendCode" data-row="getVerify">发送验证码</a>
+              </span> </div>
+      </div>
+      <div class="am-margin-top-xl">
+        <button type="button" url="__SELF__" class="am-btn am-btn-secondary  am-btn-block am-radius ajax-post confirm"   confirm-info="确定登陆？" style="background:#F60; border:1px solid #F30">登 录</button>
+      </div>
+    </form>
+  </div>
+  </div>
+<div class="empty"></div>
+<footer>
+  <li><a href="{:U('App/demo/index')}"><span class="f1"  href="#"></span><i>首页</i></a></li>
+  <li><a href="#"><span class="f2"  href="#"></span><i>发需求</i></a></li>
+  <li><a href="#"><span class="f3"  href="#"></span><i>找服务</i></a></li>
+  <li><a href="#"><span class="f4"  href="#"></span><i>我的</i></a></li>
+  </ul>
+</footer>
+<script type="text/javascript">
+var InterValObj; //timer变量，控制时间
+var count = 60; //间隔函数，1秒执行
+var curCount;//当前剩余秒数
+function sendMessage() {
+  　curCount = count;
+　　//设置button效果，开始计时
+     $("#btnSendCode").attr("disabled", "true");
+     $("#btnSendCode").text("重发验证码(" + curCount + ")");
+     InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
+　　  
+}
+//timer处理函数
+function SetRemainTime() {
+      if (curCount == 0) {                
+                window.clearInterval(InterValObj);//停止计时器
+                $("#btnSendCode").removeAttr("disabled");//启用按钮
+                $("#btnSendCode").text("重发验证码");
+            } else {
+                curCount--;
+                $("#btnSendCode").text("重发验证码(" + curCount + ")");
+        }
+  }
+//错误重置
+function SetTimeError() {
+  window.clearInterval(InterValObj);//停止计时器
+  $("#btnSendCode").removeAttr("disabled");//启用按钮
+  $("#btnSendCode").text("发送验证码");
+}
+
+$(function () {
+  $("[data-row='getVerify']").click(function () {
+    $.post("{:U('ucenter/verify/sendVerify')}", {account: $('[name="username"]').val(), type: 'mobile', action: 'member',den:1}, function (res) {
+      sendMessage();
+      if (res.info=='验证短信发送成功!') {
+          updateAlert(res.info, 'success');
+        }else {
+          SetTimeError()
+          updateAlert(res.info);
+        }
+    })
+  })
+})
+
+var verifyimg = $(".verifyimg").attr("src");
+$(".reloadverify").click(function () {
+  if (verifyimg.indexOf('?') > 0) {
+      $(".verifyimg").attr("src", verifyimg + '&random=' + Math.random());
+    } else {
+      $(".verifyimg").attr("src", verifyimg.replace(/\?.*$/, '') + '?' + Math.random());
+    }
+    $(".reloadverify").click();
+});
+</script> 
+</body>

@@ -1,0 +1,121 @@
+<extend name="Base/common"/>
+<block name="body">
+
+<a href="{:U('Ucenter/member/register')}"><img src="<if condition="shopCofing('wxad_img')">{:get_cover(shopCofing('wxad_img'),'path')}<else/>__IMG__/wad.jpg</if>" width="100%" /></a>
+
+
+
+
+<if condition="is_login()">
+<!--必须get参数和已登录状态才显示分享模态框-->
+<div class="zmodal fade"  id="myModal">
+<div id="leafContainer"></div>
+<div class="zmodal-dialog zmodal-sm" style="position:relative; z-index:9999; width:281px; margin:0 auto">
+  <div class="zmodal-content">
+    <div class="zmodal-header"></div>
+    <div class="zmodal-body">
+     {:shopCofing('redtext')}<div style="text-align:right">(红包有效期为{:shopCofing('redtime')}天)</div>
+    </div>
+    <div class="zmodal-footer">
+      <a href="javascript:history.go(-1);" class="am-btn am-btn-warning am-radius am-btn-sm am-btn-block">稍等片刻再来分享</a>
+    </div>
+  </div>
+</div>
+</div> 
+<style>
+.zmodal-dialog{ background:#fa3137}
+.zmodal-body{ color:#fff}
+.zmodal-header{ background:#fa3137 url(__IMG__/redhead.png)  no-repeat; height:122px;}
+.zmodal-header,.zmodal-footer{ border:none}
+#leafContainer{position:fixed;z-index:1049;width:100%;height:100%;top:0;overflow:hidden}
+#leafContainer>div{position:absolute;max-width:100px;max-height:100px;-webkit-animation-iteration-count:infinite,infinite;-webkit-animation-direction:normal,normal;-webkit-animation-timing-function:linear,ease-in}
+#leafContainer>div>img{width:100%;-webkit-animation-iteration-count:infinite;-webkit-animation-direction:alternate;-webkit-animation-timing-function:ease-in-out;-webkit-transform-origin:50% -100%}
+@-webkit-keyframes fade{
+0%{opacity:1}
+95%{opacity:1}
+100%{opacity:0}
+}
+@-webkit-keyframes drop{
+0%{
+	-webkit-transform:translate(0px,-50px)}
+100%{
+	-webkit-transform:translate(0px,650px)}
+
+}
+@-webkit-keyframes clockwiseSpin{	
+0%{
+	-webkit-transform:rotate(0deg)}
+100%{
+	-webkit-transform:rotate(0deg)}
+
+}
+</style>
+</if> 
+<!--红包特效结束-->
+  </div>
+</block>
+
+
+<block name="script"> 
+<if condition="is_login()">
+<script>
+//红包动画
+	const NUMBER_OF_LEAVES = 5;
+	function init()
+		{	
+		    var container = document.getElementById('leafContainer');
+		   
+		    for (var i = 0; i < NUMBER_OF_LEAVES; i++) 
+		    {
+		        container.appendChild(createALeaf());
+		    }
+		}
+		function randomInteger(low, high)
+		{
+		    return low + Math.floor(Math.random() * (high - low));
+		}
+		 
+		function randomFloat(low, high)
+		{
+		    return low + Math.random() * (high - low);
+		}
+		 
+		function pixelValue(value)
+		{
+		    return value + 'px';
+		}
+		function durationValue(value)
+		{
+		    return value + 's';
+		}
+		function createALeaf()
+		{
+    
+    var leafDiv = document.createElement('div');
+    var image = document.createElement('img');
+    image.src ='__IMG__/snow' + randomInteger(1, 3) + '.png';
+    leafDiv.style.top = "-100px";
+
+    leafDiv.style.left = pixelValue(randomInteger(0, 300));
+    var spinAnimationName = (Math.random() < 0.3) ? 'clockwiseSpin' : 'counterclockwiseSpinAndFlip';
+    leafDiv.style.webkitAnimationName = 'fade, drop';
+    image.style.webkitAnimationName = spinAnimationName;
+    var fadeAndDropDuration = durationValue(randomFloat(2, 4));
+    var spinDuration = durationValue(randomFloat(2, 8));
+    leafDiv.style.webkitAnimationDuration = fadeAndDropDuration + ', ' + fadeAndDropDuration;
+    var leafDelay = durationValue(randomFloat(0, 5));
+    leafDiv.style.webkitAnimationDelay = leafDelay + ', ' + leafDelay;
+    image.style.webkitAnimationDuration = spinDuration;
+    leafDiv.appendChild(image);
+    return leafDiv;
+	}
+  //执行对话框
+	$('#myModal').zmodal({
+		keyboard : false,
+		show     : true,
+		backdrop : 'static',
+	})
+	init();
+</script>
+</if>
+</block>

@@ -1,0 +1,113 @@
+<extend name="Base/common" />
+<block name="body">
+  <div class="header">
+    <div class="am-g am-text-center am-padding-top"> <span  class="am-icon-btn am-secondary am-icon-mobile am-icon-md am-icon-btn-lg am-margin-bottom" ></span> <br/>
+      绑定手机需要验证您的手机号码 <br/>
+      验证成功后即可自动登陆系统 </div>
+    <hr />
+  </div>
+  <div class="am-g">
+    <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
+   <form action="__SELF__" method="post" class="am-form">
+   <if condition="count($role_list)==1"> 
+     <input type="hidden" name="role" value="{$role_list[0]['id']}">
+      <else/>
+    <div class="am-margin-vertical">
+      <label for="role">角色:</label>
+       <select type="text" id="role" class="form-control" name="role">
+           <volist name="role_list" id="role">
+                   <option value="{$role.id}">{$role.title}</option>
+          </volist>
+        </select>
+      </div>
+            </if>
+            
+     <div class="am-margin-vertical">
+      <label for="nickname">昵称:</label>
+      <input type="text" name="nickname" id="nickname" placeholder="只允许中文、字母和数字和下划线">
+      </div>
+            
+       <div class="am-margin-vertical">
+      <label for="username">手机:</label>
+      <input type="text" name="username" id="username" placeholder="11位手机号码">
+      
+      </div>
+        <php>if(modC('MOBILE_VERIFY_TYPE', 0, 'USERCONFIG') == 1){</php>
+             
+       <div class="am-margin-vertical">
+      <label for="code">验证码:</label>
+     
+       <div class="am-form-group" style="position:relative; height:100%; overflow:hidden"> 
+                <input type="text" class="fam-form-field" placeholder="验证码" name="reg_verify" > <button class="lh32 am-btn am-btn-warning"  type="button" data-row="getVerify"  id="btnSendCode" style="position:absolute;right:0px;top:0px; height:100% ">发送验证码</button>
+                  
+       </div>
+   
+      </div>
+          <php>}</php>
+      <div class="am-margin-vertical">
+        <label for="password">密码:</label>
+        <input type="password" name="password" id="password"  placeholder="请输入密码">
+      </div>
+      <div class="am-margin-top-xl">
+       <input type="hidden" name="reg_type" value="mobile">
+       <input type="hidden" name="openid" value="{$_GET[openid]}">
+        <input type="hidden" name="sex" value="{$_GET[sex]}">
+        <button type="submit" class="am-btn am-btn-secondary  am-btn-block am-radius ajax-post">立即注册</button>
+      </div>
+    </form>
+  </div>
+  </div>
+</block>
+<block name="script">
+<script type="text/javascript">
+var InterValObj; //timer变量，控制时间
+var count = 60; //间隔函数，1秒执行
+var curCount;//当前剩余秒数
+
+function sendMessage() {
+  　curCount = count;
+　　//设置button效果，开始计时
+     $("#btnSendCode").attr("disabled", "true");
+     $("#btnSendCode").text("请在" + curCount + "秒内输入验证码");
+     InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
+　　  
+}
+
+//timer处理函数
+function SetRemainTime() {
+            if (curCount == 0) {                
+                window.clearInterval(InterValObj);//停止计时器
+                $("#btnSendCode").removeAttr("disabled");//启用按钮
+                $("#btnSendCode").text("重新发送验证码");
+            }
+            else {
+                curCount--;
+                $("#btnSendCode").text("请在" + curCount + "秒内输入验证码");
+        }
+  }
+//错误重置
+function SetTimeError() {
+                window.clearInterval(InterValObj);//停止计时器
+                $("#btnSendCode").removeAttr("disabled");//启用按钮
+                $("#btnSendCode").text("发送验证码");
+ }
+
+     $(function () {
+                $("[data-row='getVerify']").click(function () {
+                    var account = $('[name="username"]').val();
+                    var type = 'mobile';
+                    $.post("{:U('ucenter/verify/sendVerify')}", {account: account, type: type, action: 'member'}, function (res) {
+						sendMessage();
+                        if (res.info=='验证短信发送成功!') {
+                             updateAlert(res.info, 'success');
+                        }
+                        else {
+							SetTimeError()
+                            updateAlert(res.info);
+                        }
+                    })
+                })
+            })
+     
+    </script> 
+</block>

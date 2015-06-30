@@ -1,0 +1,19 @@
+<extend name="Base/common"/>
+<block name="body">
+<div class="am-container am-margin-top">
+
+<div class="am-panel am-panel-default">
+      <ul class="am-list am-list-static">
+    
+        <li style="border:none">微店名称：{$memberinfo.shopname|default='未设置'} </li>
+        <li>店铺广告语：{$memberinfo.signature|default='未设置'} </li>
+        <li>我的QQ号：{$memberinfo.qq|default='未设置'} </li>
+         <li>我的微信号：{$memberinfo.weixin|default='未设置'} </li>
+        <li>我的佣金：<strong>{$memberinfo.score4|default='0'}</strong> 元</li>
+        <li>我邀请的会员：<strong>{$myuser_num|default='0'}</strong> 人</li>
+        <li>我的销售额：<strong>{$myuserorder_price|default='0'}</strong> 元</li>
+        <li>{$num}级以内代理会员数共计：<strong>{$myuser_all|default='0'}</strong> 人</li>
+        <li>{$num}级以内代理订单总金额共计：<strong>{$allorder_price|default='0'}</strong> 元</li>
+      </ul>
+</div></div>
+</block>

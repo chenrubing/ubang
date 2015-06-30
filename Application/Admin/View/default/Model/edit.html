@@ -1,0 +1,150 @@
+<extend name="Public/base" />
+<block name="body">
+  <div class="main-title">
+    <h2>编辑模型</h2>
+  </div>
+  <div class="with-padding">
+    <form id="form" action="{:U('update')}" method="post" class="form-horizontal doc-modal-form">
+      <ul class="nav nav-secondary">
+        <li class="active"><a href="#basic" data-toggle="tab">基 础</a></li>
+        <li><a href="#layout" data-toggle="tab">设 计</a></li>
+        <li><a href="#advanced" data-toggle="tab">高 级</a></li>
+      </ul>
+      
+      <div class="tab-content" style="margin-top:8px">
+        <div  class="tab-pane active" id="basic">
+          <table width="100%" border="0" class="table  table-hover table-bordered ">
+            <tr>
+              <td width="17%">模型标识</td>
+              <td width="83%"><input type="text" class="text input-3" name="name" value="{$info.name}">
+                <span class="check-tips">（请输入文档模型标识）</span></td>
+            </tr>
+            <tr>
+              <td>模型名称</td>
+              <td><input type="text" class="text input-3" name="title" value="{$info.title}">
+                <span class="check-tips">（请输入模型的名称）</span></td>
+            </tr>
+            <tr>
+              <td>模型类型</td>
+              <td><select name="extend">
+                  <option value="0">独立模型</option>
+                  <option value="1">文档模型</option>
+                </select>
+                <span class="check-tips">（目前支持独立模型和文档模型）</span></td>
+            </tr>
+          </table>
+        </div>
+        <div  class="tab-pane" id="layout">
+          <table width="100%" border="0" class="table  table-hover table-bordered ">
+            <tr>
+              <td width="17%">表单显示分组</td>
+              <td width="83%"><input type="text" class="text input-5" name="field_group" value="{$info.field_group}">
+                <span class="check-tips">（用于表单显示的分组，以及设置该模型表单排序的显示）</span></td>
+            </tr>
+            <tr>
+              <td>表单显示排序<br />
+                <span class="check-tips">（直接拖动进行排序）</span></td>
+              <td><div id="drag-container" class="controls" style="position:relative;">
+                <script>
+                            $(function(){
+                                function updateVal() {
+                                    var sortVal = [];
+									
+									
+									
+									
+                                    $('#hook_sort .kanban-item').each(function(){
+                                        if(typeof $(this).data('id') != 'undefined'){
+                                            sortVal.push($(this).data('id'));
+                                        }
+										
+										var self = $(this);
+	    							 self.find('input').attr('name', 'field_sort[' + self.closest('ul').data('group') + '][]');
+										
+                                    });
+                                    $("input[name='field_sort[{$key}][]']").val(sortVal.join(','));
+									 
+
+                                }
+                                $('#hook_sort').kanbans({'drop':updateVal});
+                            })
+
+                        </script>
+                <div id="hook_sort" class="kanbans">
+                  <volist name=":parse_field_attr($info['field_group'])" id="vo">
+                    <div class="kanban panel" data-id="addons">
+                      <div class="panel-heading"> <strong>{$vo}</strong> </div>
+                      <div class="panel-body">
+                        <ul class="kanban-list" data-group="{$key}" style="padding:0px">
+                          <foreach name="fields" item="field" key="k">
+                            <if condition="(($field['group'] eq $key) or($i eq 1 and !isset($field['group']))) and ($field['is_show'] eq 1)">
+                              <div class="kanban-item" data-id="{$addons_vo}"> {$field['title']} [{$field['name']}]
+                                <input type="hidden" name="field_sort[{$key}][]" value="{$field['id']}"/>
+                              </div>
+                            </if>
+                          </foreach>
+                        </ul>
+                      </div>
+                    </div>
+                  </volist>
+                </div></div></td>
+            </tr>
+            <tr>
+              <td>列表定义</td>
+              <td><textarea name="list_grid" class="input-5">{$info.list_grid}</textarea>
+                <span class="check-tips">（默认列表模板的展示规则）</span></td>
+            </tr>
+            <tr>
+              <td>默认搜索字段</td>
+              <td><input type="text" class="text input-5" name="search_key" value="{$info.search_key}"></td>
+            </tr>
+            <tr>
+              <td>高级搜索字段</td>
+              <td><input type="text" class="text input-5" name="search_list" value="{$info.search_list}">
+                <span class="check-tips">（默认列表模板的高级搜索项）</span></td>
+            </tr>
+          </table>
+        </div>
+        <!-- 高级 -->
+        <div  class="tab-pane" id="advanced">
+          <table width="100%" border="0" class="table  table-hover table-bordered ">
+            <tr>
+              <td width="17%">列表模板</td>
+              <td width="83%"><input type="text" class="text input-5" name="template_list" value="{$info.template_list}">
+                <span class="check-tips">（自定义的列表模板，放在Application\Admin\View\Think下，不写则使用默认模板）</span></td>
+            </tr>
+            <tr>
+              <td>新增模板</td>
+              <td><input type="text" class="text input-5" name="template_add" value="{$info.template_add}">
+                <span class="check-tips">（自定义的新增模板，放在Application\Admin\View\Think下，不写则使用默认模板）</span></td>
+            </tr>
+            <tr>
+              <td>编辑模板</td>
+              <td><input type="text" class="text input-5" name="template_edit" value="{$info.template_edit}">
+                <span class="check-tips">（自定义的编辑模板，放在Application\Admin\View\Think下，不写则使用默认模板）</span></td>
+            </tr>
+            <tr>
+              <td>列表数据大小</td>
+              <td><input type="text" class="text input-1" name="list_row" value="{$info.list_row}">
+                <span class="check-tips">（默认列表模板的分页属性）</span></td>
+            </tr>
+          </table>
+        </div>
+        <div class="buttons">
+          <input type="hidden" name="id" value="{$info['id']}"/>
+          <button class="btn submit-btn ajax-post no-refresh" type="submit" target-form="form-horizontal">确定</button>
+          <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返回</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</block>
+<block name="script"> 
+
+  <script type="text/javascript" charset="utf-8">
+Think.setValue("extend", {$info.extend|default=0});
+//导航高亮
+highlight_subnav('{:U('Model/index')}');
+
+</script> 
+</block>

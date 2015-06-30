@@ -1,0 +1,1 @@
+<?php if (!defined('THINK_PATH')) exit();?>Service/carousel_edit?id=1

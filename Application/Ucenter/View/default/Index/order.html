@@ -1,0 +1,64 @@
+<extend name="Base/common"/>
+<block name="body">
+  <div class="am-btn-group am-btn-group-justify goodsbtns" data-am-sticky> <a href="{:U('order',array('status'=>'0'))}"  class="am-btn am-btn-<empty name='_GET[status]'>success<else/>primary</empty>">未付款</a> <a href="{:U('order',array('status'=>'3'))}"  class="am-btn am-btn-<eq name='_GET[status]' value='3'>success<else/>primary</eq>">交易完成</a> 
+    <!-- <a href="{:U('order',array('status'=>'-1'))}"  class="am-btn am-btn-<eq name='_GET[status]' value='-1'>success<else/>primary</eq>">申请退款</a>--> 
+    <a href="{:U('order',array('status'=>'all'))}"  class="am-btn am-btn-<eq name='_GET[status]' value='all'>success<else/>primary</eq>">全部订单</a> </div>
+  <div class="am-container">
+    <empty name="list">
+      <div class="am-alert am-alert-danger am-margin-top" data-am-alert> 还没有订单 </div>
+    </empty>
+    
+    <!--内容开始-->
+    <div data-am-widget="list_news" class="am-list-news am-list-news-default"> 
+      <!--列表标题-->
+      <div class="am-list-news-bd">
+        <ul class="am-list">
+          <!--缩略图在标题上方-->
+          
+          <volist name="list" id="vl">
+            <li class="am-g am-list-item-desced am-list-item-thumbed am-list-item-thumb-top" style=" background:none">
+              <div class=" am-list-main" style="font-size:14px;color:#666">
+                <volist name="vl[goods_info]" id="goods">
+                  <h3 class="am-list-item-hd" style="border-bottom:1px solid #eee;"><span class="am-icon-mail-forward am-link-muted"></span> <a href="{:U('Home/Goods/goodsdetail',array('id'=>$goods[0]))}" >{:get_GoodsInfo($goods[0],'title')}</a></h3>
+                  数量:<span class="am-text-danger">{$goods[1]}</span>
+                  <notempty name='goods[2]'>颜色:<span class="am-text-danger">{$goods[2]}</span></notempty>
+                  <notempty name='goods[3]'>| 规格:<span class="am-text-danger"> {$goods[3]}</span></notempty>
+                </volist>
+                <div>
+                  <div class="text-muted author"> 订单编号：{$vl.id}</div>
+                  <notempty  name="vl.spec">
+                    <div class="text-muted author"> 规格：{$vl.goods_info}</div>
+                  </notempty>
+                  <div class="text-muted author"> 购买时间：{$vl.create_time|date="Y-m-d H:i",###} </div>
+                  <div class="text-muted author"> 订单状态：
+                    <eq name="vl.status" value="-3"><span class="am-text-danger">退货请求被驳回</span></eq>
+                    <eq name="vl.status" value="-2"><span class="am-text-danger">已退货,请关注您的账户余额</span></eq>
+                    <eq name="vl.status" value="-1"><span class="am-text-danger">申请退货中,请关注订单状态</span></eq>
+                    <eq name="vl.status" value="0"><span class="am-text-warning">未付款</span></eq>
+                    <eq name="vl.status" value="1"><span class="am-text-primary">已付款,等待卖家发货</span></eq>
+                    <eq name="vl.status" value="2"><span class="am-text-success">已发货,等待到货</span> </eq>
+                    <eq name="vl.status" value="3"><span class="am-text-success">已确认收货，交易成功</span></eq>
+                    <div class="am-cf">
+                      <eq name="vl.status" value="1"> 
+                        <!--<button url="{:U('Ucenter/Order/doorder',array('id'=>$vl[id],'did'=>-1))}" type="button" class="am-btn am-btn-warning am-btn-sm am-fr  am-margin-left-sm am-radius ajax-get" >不想买了，申请退款</button>--> 
+                      </eq>
+                      <eq name="vl.status" value="0">
+                        <button url="{:U('doorder',array('id'=>$vl[id],'status'=>-4))}" type="button" class="am-btn am-btn-warning am-btn-sm am-fr  am-margin-left-sm am-radius ajax-get confirm" >取消订单</button>
+                        <a href="{:U('Home/Car/pay',array('id'=>$vl[id]))}"  class="am-btn am-btn-secondary am-btn-sm am-fr am-radius" style="padding-right:13px" >去付款</a></eq>
+                      <eq name="vl.status" value="2"> 
+                        <!-- <button url="{:U('Ucenter/Order/doorder',array('id'=>$vl[id],'did'=>-1))}" type="button" class="am-btn am-btn-danger am-btn-sm am-fr am-radius am-margin-left-sm ajax-get" >申请退货</button>-->
+                        <button url="{:U('doorder',array('id'=>$vl[id],'status'=>3))}" type="button" class="am-btn am-btn-success am-btn-sm am-fr  am-radius ajax-get confirm" >确认收货</button>
+                      </eq>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </volist>
+        </ul>
+      </div>
+    </div>
+    <!--内容结束--> 
+  </div>
+  </div>
+</block>

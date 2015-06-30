@@ -1,0 +1,36 @@
+<extend name="Public/base" />
+<block name="sidebar"> <include file="Article/sidemenu" /> </block>
+<block name="body">
+  <div class="main-title">
+    <H2>编辑单页 <span class="breadcrumb" style="margin-bottom:0px; padding:0px">
+      <volist name="rightNav" id="nav">
+        <li><a href="{:U('article/index','cate_id='.$nav['id'])}">{$nav.title}</a></li>
+      </volist>
+      </span></H2>
+  </div>
+  <!-- 表单 -->
+  <div class="with-padding">
+  <form id="form" action="{:U('Admin/Category/Edit')}" method="post" class="form-horizontal">
+    <table  cellpadding="0" cellspacing="0" class="table  table-bordered" >
+      <tr>
+        <td width="13%">单页名称</td>
+        <td width="87%"><input type="text" name="title" value="{$info.title}"  class="input-5"  placeholder="请填写该单页的标题"></td>
+      </tr>
+      <tr>
+        <td width="13%">单页内容</td>
+        <td width="87%"><textarea  name="content" style="display:none">{$info.content}</textarea>
+            {:W('Common/Ueditor/editor',array('content','content',$info[content],'100%','400px',all))}
+        </td>
+      </tr>
+    </table>
+    <div class="buttons">
+      <button class="btn submit-btn ajax-post btn-info" id="submit" type="submit" target-form="form-horizontal">确定</button>
+     <a class="btn btn-return" href="{:U('Admin/Article/Mydocument')}">返回</a>
+      <a class="btn btn-return" href="{:U('Cms/Article/lists',array('category'=>$info[id]))}" target="_blank">访问</a>
+      <input type="hidden" name="jump" value="{:U('Admin/Article/Mydocument')}"/>
+      <input type="hidden" name="id" value="{$info.id|default=''}"/>
+      <input type="hidden" name="pid" value="{$info.pid|default=''}"/>
+    </div>
+   
+  </form> </div>
+</block>

@@ -1,0 +1,1 @@
+<?php if (!defined('THINK_PATH')) exit();?>Service/local_edit?id=9

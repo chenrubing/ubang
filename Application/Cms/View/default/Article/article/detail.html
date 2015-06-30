@@ -1,0 +1,25 @@
+<extend name="Base/common"/>
+<block name="header"> {:W('Common/SubMenu/render',array($sub_menu,'home','资讯',''))} </block>
+<block name="style">
+  <style>
+#main-container {margin-top:0px}
+hr{ margin:0px 0px}
+.navbar{ margin-bottom:10px}
+</style>
+</block>
+<block name="body">
+  <div class="container" style="min-height: 400px">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">{$category.title}</div>
+          <div class="panel-body">
+            <h2>{$info.title}</h2>
+            <div style="line-height:25px; font-size:14px; color:#555">{$info.content}</div>
+            <div style="text-align:right; color:#888; margin-top:20px">发布时间：{$category.create_time|date="Y-m-d H:i",###}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block>

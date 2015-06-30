@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html lang="">
+<head>
+<meta charset="UTF-8">
+<title>FrozenUI - 专注于移动web的UI框架</title>
+<meta name="Description" content="专注于移动web的UI框架，基于手机QQ规范" />
+<meta name="Keywords" content="frozen，frozenui，frozenjs，forzen ui，forzen js" />
+<meta name="author" content="fayching" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link type="image/x-icon" href="http://frozenui.github.io/static/favicon.ico" rel="icon">
+<!--统计代码 -->
+<!-- <link rel="stylesheet" type="text/css" href="http://i.gtimg.cn/vipstyle/frozenui/1.2.1/css/global.css?_bid=306"/> -->
+<link rel="stylesheet" type="text/css" href="__UI__/frozenui/1.2.1/css/global.css">
+<link rel="stylesheet" type="text/css" href="__CSS__/app.css">
+<!-- <script src="http://i.gtimg.cn/vipstyle/frozenjs/lib/zepto.min.js?_bid=304"></script>
+        <script src="http://i.gtimg.cn/vipstyle/frozenjs/1.0.1/frozen.js?_bid=304"></script> -->
+<script src="__UI__/frozenjs/lib/zepto.min.js"></script>
+<script src="__UI__/frozenjs/1.0.1/frozen.js"></script>
+<script src="__JS__/ajax.js"></script>
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp&libraries=geometry"></script>
+<style type="text/css">
+.lei{ width:100%; height:auto; background-color:#CCC;}
+.lei div{ width:90px; height:30px; line-height:30px; border:1px solid #FFF; float: left;}
+#address{ border-radius:9px; padding-left: 5px;  width:120px; font-size:14px; line-height:25px; height:25px;  background-color:#CCC}
+#anniu{ border: 1px solid #CCC;line-height:25px;margin-left: 10px;height:25px;width:80px; border-radius:9px;  font-size:14px;}
+</style>
+</head>
+<body style="overflow:hidden">
+<header><a class="head_back" onClick="history.go(-1);">返回</a> 
+<input type="text" id="address" class="form-control" value="济南"/><button type="button" id="anniu" onclick="aodeadd()" class="btn btn-primary" >搜索地址</button> <a class="head_search" href="{:U('findservice')}">列表</a></header>
+  <div id="main" style=" height:200px !important;" ></div>
+    <div class="lei">
+  <volist name="list" id="vo">
+  	<div>{$vo.da}</div>
+  		<volist name="vo.list" id="li">
+  				<div onclick="codeAddress('{$li.name}')">{$li.name}</div>
+
+  		</volist>
+  </volist>
+  </div>
+ 
+ <script type="text/javascript">
+//测量
+ 
+$('#main').css({'height':$(window).height()-90+'px'});
+//腾讯地图初始化
+	var map,markersArray = [];
+	var geocoder,map,marker = null;
+	var center = new qq.maps.LatLng(36.676553,117.004644);
+    var map = new qq.maps.Map(document.getElementById("main"), {
+        center: center,
+        zoom: 10
+    });
+	var infoWin = new qq.maps.InfoWindow({
+        map: map
+    });
+    geocoder = new qq.maps.Geocoder({
+        complete : function(result){
+            map.setCenter(result.detail.location);
+            var marker = new qq.maps.Marker({
+                map:map,
+		     	animation:qq.maps.MarkerAnimation.DROP,
+                position: result.detail.location
+            });
+			var anchor = new qq.maps.Point(10, 60),
+		        size = new qq.maps.Size(42, 68),
+		        origin = new qq.maps.Point(0, 0);
+				// marker.setIcon(icon);
+	 			 marker.setShadow(iconb);
+        }
+    });
+	
+	function codeAddress(a) {
+   	 //var address = document.getElementById("address").value;
+   	 	geocoder.getLocation(a);
+	}
+	
+	function aodeadd()
+	{
+		var ass = document.getElementById("address").value;
+   	 	geocoder.getLocation(ass);
+	}
+	/*$.ajax({
+		async:false,
+		type: 'POST',
+		url: '{:U('GetJson')}',
+		data :true,
+		dataType:'json',
+		success:function(json){
+			var li = '';
+	
+			 //遍历json数据
+			$.each(json.members,function(index,array){
+				 
+				var center = new qq.maps.LatLng(array['map'].split(",")[0],array['map'].split(",")[1]);
+           		var marker = new qq.maps.Marker({
+               	 	position: center,
+                	map: map
+         	   });
+
+            qq.maps.event.addListener(marker, 'click', function() {
+				
+                infoWin.open();
+                infoWin.setContent('<div class="namcard"> 地址：'+array['address']+'<br/>主营：'+array['category_ids']+'<br>公司名称：'+array['nickname']+' </div>');
+                infoWin.setPosition(center);
+            }); 
+		}); 
+				$("#list ul").append(li);
+		},
+		error:function(){
+			alert("网点数据加载失败");
+		}
+	});*/
+
+
+
+
+
+
+</script> 
+ 
+
+<footer>
+  <li><a href="{:U('App/demo/index')}"><span class="f1"  href="#"></span><i>首页</i></a></li>
+  <li><a href="#"><span class="f2"  href="#"></span><i>发需求</i></a></li>
+  <li><a href="#"><span class="f3"  href="#"></span><i>找服务</i></a></li>
+  <li><a href="#"><span class="f4"  href="#"></span><i>我的</i></a></li>
+  </ul>
+</footer>
+</body>

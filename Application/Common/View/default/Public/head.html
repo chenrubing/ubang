@@ -1,0 +1,27 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Expires" content="-1">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Pragma" content="no-cache">
+{:hook('syncMeta')} <include file="Public/seo"/>
+<block name="style"></block>
+<link rel="stylesheet" href="__UI__/css/zui.min.css">
+<link rel="stylesheet" href="__UI__/css/basic.css">
+<link rel="stylesheet" href="__CSS__/style.css">
+<script src="__PUBLIC__/js/jquery-1.10.2.min.js"></script>
+<script src="__UI__/js/zui.min.js"></script>
+<script src="__UI__/js/ajax.js"></script>
+
+<include file="Public/var"/> 
+<script>
+    //全局内容的定义
+    var _ROOT_ = "__ROOT__";
+    var MID = "{:is_login()}";
+    var MODULE_NAME="<php>echo MODULE_NAME;</php>";
+    var ACTION_NAME="<php>echo ACTION_NAME;</php>";
+</script>
+<audio id="music" src="" autoplay="autoplay"></audio>
+{:hook('pageHeader')}

@@ -1,0 +1,90 @@
+hr{ margin-bottom:0px}
+.am-footer{ margin-top:2rem;}
+.am-footer-default{ background:none; margin-bottom:40px; border-top:1px solid #DDD}
+.footlist li{ position:relative}
+.shopcar{ position:absolute;top:0px;right:15%}
+ /*********zui部分样式**********/
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);border:0}
+.close{float:right;font-size:19.5px;font-weight:bold;line-height:1;color:#000;text-shadow:0 1px 0 #fff;filter:alpha(opacity=20);opacity:.2}
+.close:hover,.close:focus{color:#000;text-decoration:none;cursor:pointer;filter:alpha(opacity=50);opacity:.5}
+button.close{-webkit-appearance:none;padding:0;cursor:pointer;background:transparent;border:0}
+.fade{opacity:0;-webkit-transition:opacity .15s linear;-o-transition:opacity .15s linear;transition:opacity .15s linear}
+.fade.in{opacity:1}
+.scale{-webkit-transition:all .15s linear;-o-transition:all .15s linear;transition:all .15s linear;-webkit-transform:scale(.8);-ms-transform:scale(.8);-o-transform:scale(.8);transform:scale(.8)}
+.scale.in{-webkit-transform:scale(1);-ms-transform:scale(1);-o-transform:scale(1);transform:scale(1)}
+.collapse{display:none}
+.collapse.in{display:block}
+.collapsing{position:relative;height:0;overflow:hidden;-webkit-transition:height .35s ease;-o-transition:height .35s ease;transition:height .35s ease}
+.zmodal-open{overflow:hidden}
+.zmodal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1050;display:none;overflow:hidden;-webkit-overflow-scrolling:touch;outline:0}
+.zmodal.fade .zmodal-dialog{-webkit-transition:-webkit-transform .3s ease-out;-o-transition:-o-transform .3s ease-out;transition:transform .3s ease-out;-webkit-transform:translate3d(0,-25%,0);transform:translate3d(0,-25%,0)}
+.zmodal.in .zmodal-dialog{-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0)}
+.zmodal>.loader{display:none}
+.zmodal.zmodal-loading .zmodal-dialog{opacity:0}
+.zmodal.zmodal-loading .loader{position:absolute;top:35%;left:50%;display:block;width:80px;margin-left:-40px;font-size:56px;color:#fff;text-align:center}
+.zmodal-open .zmodal{overflow-x:hidden;overflow-y:auto}
+.zmodal-iframe .zmodal-body>iframe{border-radius:0 0 6px 6px}
+.zmodal-dialog{position:relative;width:auto;background-color:#fff;-webkit-background-clip:padding-box;background-clip:padding-box;border:1px solid #999;border:1px solid rgba(0,0,0,.2);border-radius:6px;outline:0;-webkit-box-shadow:0 3px 9px rgba(0,0,0,.5);box-shadow:0 3px 9px rgba(0,0,0,.5)}
+.zmodal-backdrop{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1040;background-color:#000}
+.zmodal-backdrop.fade{filter:alpha(opacity=0);opacity:0}
+.zmodal-backdrop.in{filter:alpha(opacity=50);opacity:.5}
+.zmodal-header{min-height:16.53846154px;padding:15px;border-bottom:1px solid #e5e5e5}
+.zmodal-header .close{margin-top:-2px}
+.zmodal-title{margin:0;line-height:1.53846154}
+.zmodal-body{position:relative;padding:15px}
+.zmodal-footer{padding:15px;text-align:right;border-top:1px solid #e5e5e5}
+.zmodal-footer .btn+.btn{margin-bottom:0;margin-left:5px}
+.zmodal-footer .btn-group .btn+.btn{margin-left:-1px}
+.zmodal-footer .btn-block+.btn-block{margin-left:0}
+.zmodal-scrollbar-measure{position:absolute;top:-9999px;width:50px;height:50px;overflow:scroll}
+@media(min-width:768px){.zmodal-dialog{width:600px;margin:30px auto;-webkit-box-shadow:0 5px 15px rgba(0,0,0,.5);box-shadow:0 5px 15px rgba(0,0,0,.5)}
+.zmodal-sm{width:300px}
+}
+@media(min-width:992px){.zmodal-lg{width:900px}
+}
+.zmodal-lightbox .zmodal-dialog{position:relative;max-width:100%;max-height:100%;margin-bottom:0;background:0;border:0;-webkit-box-shadow:none;box-shadow:none;-webkit-transition:all .5s cubic-bezier(.175,.885,.32,1);-o-transition:all .5s cubic-bezier(.175,.885,.32,1);transition:all .5s cubic-bezier(.175,.885,.32,1)}
+.zmodal-lightbox .zmodal-dialog:hover .close,.zmodal-lightbox .zmodal-dialog:focus .close{filter:alpha(opacity=100);opacity:1}
+.zmodal-lightbox .zmodal-dialog:hover .controller,.zmodal-lightbox .zmodal-dialog:focus .controller{filter:alpha(opacity=90);outline:0;opacity:.9}
+.zmodal-lightbox .zmodal-dialog:hover .controller>.icon,.zmodal-lightbox .zmodal-dialog:focus .controller>.icon{-webkit-box-shadow:1px 1px 16px rgba(0,0,0,.5);box-shadow:1px 1px 16px rgba(0,0,0,.5)}
+.zmodal-lightbox .close{position:absolute;top:-15px;right:-13px;display:block;width:30px;height:30px;font-size:14px;color:#fff;text-align:center;background-color:#333;filter:alpha(opacity=90);border:1px solid #fff;border-radius:15px;-webkit-box-shadow:0 5px 5px rgba(0,0,0,.5);box-shadow:0 5px 5px rgba(0,0,0,.5);opacity:.9;-webkit-radius:15px}
+.zmodal-lightbox.lightbox-full .close{top:10px;right:10px}
+.zmodal-lightbox .controller{position:absolute;top:0;display:none;height:100%;padding:10px 20px;line-height:100%;color:#fff;cursor:pointer;background:0;filter:alpha(opacity=5);border:0;opacity:.05;-webkit-transition:all .5s cubic-bezier(.175,.885,.32,1);-o-transition:all .5s cubic-bezier(.175,.885,.32,1);transition:all .5s cubic-bezier(.175,.885,.32,1)}
+.zmodal-lightbox .controller.show{display:block}
+.zmodal-lightbox .controller>.icon{display:inline-block;width:50px;height:50px;line-height:50px;background-color:#333;border:2px solid #fff;border-radius:25px;-webkit-radius:25px}
+.zmodal-lightbox .controller>.icon:before{font-size:28px}
+.zmodal-lightbox .controller:hover{filter:alpha(opacity=100);opacity:1}
+.zmodal-lightbox .controller.prev{left:0}
+.zmodal-lightbox .controller.next{right:0}
+.zmodal-lightbox .caption{display:none}
+.zmodal-lightbox.lightbox-with-caption .caption{position:absolute;bottom:0;display:block;width:100%;padding:10px 15px;color:#fff;text-align:center;text-shadow:1px 1px 0 rgba(0,0,0,.3);background:rgba(0,0,0,.15);opacity:.5;-webkit-transition:all .5s cubic-bezier(.175,.885,.32,1);-o-transition:all .5s cubic-bezier(.175,.885,.32,1);transition:all .5s cubic-bezier(.175,.885,.32,1)}
+.zmodal-lightbox.lightbox-with-caption .zmodal-dialog:hover .caption{background:rgba(0,0,0,.6);opacity:1}
+.lightbox-img{display:block;width:inherit;max-width:100%;height:auto;padding:0;margin:0 auto;cursor:pointer;-webkit-box-shadow:0 5px 15px rgba(0,0,0,.5);box-shadow:0 5px 15px rgba(0,0,0,.5);-webkit-transition:all .5s cubic-bezier(.175,.885,.32,1);-o-transition:all .5s cubic-bezier(.175,.885,.32,1);transition:all .5s cubic-bezier(.175,.885,.32,1)}
+.messager{position:fixed;z-index:99999;max-width:80%;padding-right:50px;color:#fff;background-color:#333;background-color:rgba(0,0,0,.8);border-radius:20px}
+.messager.top{top:60px}
+.messager.top-left{top:20px;left:20px}
+.messager.top-right{top:20px;right:20px}
+.messager.bottom{bottom:60px}
+.messager.bottom-left{bottom:20px;left:20px}
+.messager.bottom-right{right:20px;bottom:20px}
+.messager-content{padding:10px 20px}
+.messager-content>[class^='icon-']{display:inline-block;margin-right:8px}
+.messager-actions{position:absolute;top:10px;right:15px}
+.messager-actions>.action{color:#fafafa;color:rgba(255,255,255,.6);text-shadow:none;background:0;border:0}
+.messager-actions>.action.close{font-size:20px;font-weight:normal;opacity:1}
+.messager-actions>.action:hover{color:#fff}
+.messager-primary{background-color:#3280fc}
+.messager-success{background-color:#229f24}
+.messager-info{background-color:#39b3d7}
+.messager-warning{background-color:#e48600}
+.messager-danger{background-color:#d2322d}
+.messager-important{background-color:#81511c}
+.messager-special{background-color:#8957a1}
+
+
+
+.am-form-group{ position:relative}
+.am-form-group .send{ position:absolute;right:0px;top:0px; padding:6px 10px; height:100%}
+.am-form-group .send.red{ background: #d9534f; color:#fff}
+.am-form-group .send.green{ background:#5cb85c; color:#fff}
+
+ 

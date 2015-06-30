@@ -1,0 +1,13 @@
+<extend name="Base/common"/>
+<block name="body">
+<div class="am-container am-margin-top">
+<article class="am-article">
+  <div class="am-article-hd">
+    <h1 class="am-article-title" style="border-bottom:1px solid #eee; padding-bottom:20px">{$category.title}</h1>
+    <p class="am-article-meta am-text-right">{:C('WEB_SITE')}&nbsp; {$category.create_time|date="Y-m-d H:i",###} &nbsp;<i class="am-icon-eye"></i> &nbsp;{$category.view}次浏览</p>
+  </div>
+  <div class="am-article-bd">
+   {$category.content}
+  </div>
+</article></div>
+</block>

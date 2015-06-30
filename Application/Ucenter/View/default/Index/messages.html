@@ -1,0 +1,38 @@
+<extend name="Base/common"/>
+<block name="body">
+<div class="am-btn-group am-btn-group-justify goodsbtns" data-am-sticky>
+   <a href="{:U('messages')}"  class="am-btn am-btn-<empty name='_GET[type]'>success<else/>primary</empty>"><i class="am-icon-comment-o"></i> 未读消息</a>
+    <a href="{:U('messages',array('type'=>'all'))}"  class="am-btn am-btn-<eq name='_GET[type]' value='all'>success<else/>primary</eq>"><i class="am-icon-list"></i> 全部消息</a>
+ </div>
+  
+  <php> $user = query_user(array('avatar128','avatar64','nickname','uid','space_url','icons_html'), $messages['uid']); </php>
+  
+  <div class="am-container">
+    <empty name="messages">
+      <div class="am-alert am-alert-danger am-margin-top" data-am-alert> 没有消息 </div>
+    </empty>
+    <volist name="messages" id="message">
+      <article class="am-comment  am-margin-top"> <a> <img  class="am-comment-avatar"   src="{$message.from_user.avatar64}"> </a>
+        <div class="am-comment-main">
+          <header class="am-comment-hd"> 
+            <!--<h3 class="am-comment-title">评论标题</h3>-->
+            <div class="am-comment-meta"> 来自<a href="#link-to-user" class="am-comment-author">{:get_nickname($message['from_uid'])}</a> 的消息
+              <time>{$message.create_time|friendlyDate}</time>
+            </div>
+          </header>
+          <div class="am-comment-bd"> <strong>{$message.title}</strong>:{$message.content}
+            <hr data-am-widget="divider" style="margin-bottom:10px" class="am-divider am-divider-default"/>
+        
+     <a href="{:U('setMessage',array('id'=>$message[id],'status'=>-1))}" class="am-btn am-btn-danger am-radius am-btn-sm ajax-get am-fr am-margin-left-sm confirm" confirm-info="确定删除吗？">删除</a> 
+     <a href="{$message.url}" class="am-btn am-btn-primary am-radius am-btn-sm  am-margin-left-sm am-fr">详情</a>
+            
+            <if condition="!$message[is_read]"> 
+            <a href="{:U('setMessage',array('id'=>$message[id],'status'=>1))}" class="am-btn am-btn-success am-radius am-btn-sm ajax-get am-fr"  onclick="$(this).text('ok!已阅')">已阅</a> 
+            </if>
+    
+          </div>
+        </div>
+      </article>
+    </volist>
+  </div>
+</block>

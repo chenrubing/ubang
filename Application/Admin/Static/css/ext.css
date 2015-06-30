@@ -1,0 +1,37 @@
+.with-padding-lg {
+  padding: 24px 10px ;
+}
+label{  cursor:pointer;}
+.checkbox,.radio { margin-right:8px}
+.btn i{ margin-right:2px}
+.nopadding{ padding:0px}
+.checkmod{ margin:0px; margin-top:8px}
+.tabel-center{ text-align:center}
+.tabel-center th,.tabel-center td{ text-align:center}
+
+.alert{ margin-bottom:0px}
+
+.input-1{ width:80px}
+.input-2{ width:160px}
+.input-3{ width:240px}
+.input-4{ width:320px}
+.input-5{ width:400px}
+.input-6{ width:500px}
+
+textarea.input-3{ height:150px}
+textarea.input-4{ height:100px}
+textarea.input-5{ height:150px}
+textarea.input-6{ height:200px}
+
+
+.check-tips{ color:gray; margin-left:10px; font-size:13px; display:inline-block; vertical-align:middle}
+.buttons{ margin-top:10px}
+
+.nav-secondary{ border-bottom:2px solid #ddd; position:relative;top:-2px}
+.nav-secondary li{ position:relative;top:2px}
+
+body{ color:#444}
+a{ color:#31b0d5}
+.btn-primary{  background-color: #5bc0de; border-color: #46b8da;}
+.btn-primary:hover{background-color:#31b0d5;border-color:#269abc}
+.btn-primary[disabled]{background-color:#5bc0de;border-color:#46b8da}

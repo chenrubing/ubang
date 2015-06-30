@@ -1,0 +1,25 @@
+<extend name="Base/common"/>
+<block name="body">
+  <div class="am-container am-margin-top">
+    <empty name="list">
+      <div class="am-alert am-alert-warning" data-am-alert>
+        <button type="button" class="am-close">&times;</button>
+        还没有代理会员</div>
+      <else/>
+      <table width="100%" border="0" class="am-table am-table-bordered am-table-striped  shoptable am-text-center">
+        <tr>
+          <th width="50%">用户昵称</th>
+          <th width="14%">级别</th>
+          <th width="36%">登陆次数</th>
+        </tr>
+        <volist name="list" id="vo">
+          <tr>
+            <td class="am-text-left">{:get_nickname($vo[uid])}</td>
+            <td>{$vo.level}级</td>
+            <td>{$vo.create_time|date="Y-m-d",###}</td>
+          </tr>
+        </volist>
+      </table>
+    </empty>
+  </div>
+</block>

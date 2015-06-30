@@ -1,0 +1,23 @@
+<php> D('Member')->need_login();</php>
+<php> $unreadMessage=D('Common/Message')->getHaventReadMeassageAndToasted(is_login()); </php>
+<header data-am-widget="header" class="am-header am-header-default">
+  <div class="am-header-left am-header-nav"> <a href="javascript:history.go(-1);" class=""> <i class="am-header-icon am-icon-mail-reply am-icon-sm"></i> </a> </div>
+  <h1 class="am-header-title"> <a href="javascript: void(0)"> {:C('WEB_SITE')} </a> </h1>
+  <div class="am-header-right am-header-nav" data-am-dropdown> <a href="javascript:history.go(-1);" class="am-dropdown-toggle" data-am-dropdown-toggle> <i class="am-header-icon am-icon-user am-icon-sm"></i> </a>
+    <ul class="am-dropdown-content">
+      <if condition="is_login()">
+        <li><a>您好,{:get_nickname(is_login())}</a> </li>
+         <li><a href="{:U('ucenter/Config/index')}">修改资料</a> </li>
+        <li><a href="{:U('ucenter/index/Collection')}">我的收藏</a> </li>
+  		  <li><a href="{:U('ucenter/index/order')}">我的订单</a></li>
+        <li><a href="{:U('ucenter/index/messages')}">我的消息</a></li>
+        <li><a href="{:U('ucenter/index/red')}">我的红包</a></li>
+        <li><a class="ajax-get" href="{:U('ucenter/member/logout')}">注销登陆</a></li>
+        <else/>
+        <li><a href="{:U('Ucenter/member/login')}">会员登录</a></li>
+        <li><a href="{:U('Ucenter/member/register/type/mobile')}">免费注册</a></li>
+      </if>
+     
+    </ul>
+  </div> 
+</header>

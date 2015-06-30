@@ -1,0 +1,123 @@
+<extend name="Public/base" />
+<block name="body">
+<link href="__PUBLIC__/js/ext/webuploader/css/webuploader.css" type="text/css" rel="stylesheet">
+
+<div class="main-title">
+  <h2>发布{$info.model_id|get_document_model='title'}<span class="breadcrumb" style="margin-bottom:0px; padding:0px">
+    <volist name="rightNav" id="nav">
+      <li> <a href="{:U('article/index','cate_id='.$nav['id'])}">{$nav.title}</a></li>
+    </volist>
+    </span></h2>
+</div>
+
+<!-- 标签页导航 -->
+<div class="with-padding">
+  <ul class="nav nav-secondary">
+    <volist name=":parse_config_attr($model['field_group'])" id="group"> <li 
+      <eq name="key" value="1">class="active"</eq>
+      ><a href="#tab{$key}"  data-toggle="tab">{$group}属性</a>
+      </li>
+    </volist>
+  </ul>
+  
+  <!-- 表单 -->
+  
+  <form id="form" action="{:U('update')}" method="post" class="form-horizontal" style="margin-top:10px">
+    <table width="100%"  cellpadding="0" cellspacing="0">
+      <tr>
+        <td valign="top"><!-- 基础文档模型 -->
+          
+          <div class="tab-content">
+            <volist name=":parse_config_attr($model['field_group'])" id="group">
+              <div id="tab{$key}" class="tab-pane <eq name="key" value="1">active
+                </eq>
+                ">
+                <table width="100%"  cellpadding="0" cellspacing="0" class="table  table-bordered" >
+                  <volist name="fields[$key]" id="field">
+                    <if condition="$field['is_show'] == 1 || $field['is_show'] == 3">
+                      <tr> <include file="_key"/> </tr>
+                    </if>
+                  </volist>
+                </table>
+              </div>
+              <!--选项卡切换结束--> 
+            </volist>
+          </div></td>
+        <td width="200" valign="top"  style=" padding:0px 10px"><table width="100%" border="0" class="table table-hover table-bordered ">
+            <tr>
+              <td>上传文章封面图</td>
+            </tr>
+            <tr>
+              <td align="center"><div data-toggle="upimg" name="cover_id" title="请上传图片" maxnum="1" value="{$data[cover_id]}" id="cover_id" src="{$data[cover_id]|get_cover='path'}"></div></td>
+            </tr>
+            <tr>
+              <td>发布时间</td>
+            </tr>
+            <tr>
+              <td><input type="text" name="create_time" id="time-start" class="input-2 Wdate" value="{$data[create_time]|time_format}" placeholder="请选择时间"></td>
+            </tr>
+            <tr>
+              <td>截止时间</td>
+            </tr>
+            <tr>
+              <td><input type="text" name="deadline" id="time-end" class="input-2 Wdate" value="<notempty name="data[deadline]">{$data[deadline]|time_format}</notempty>" placeholder="请选择时间"></td>
+            </tr>
+            <tr>
+              <td>浏览量</td>
+            </tr>
+            <tr>
+              <td><input type="text" name="view" class="input-1" value="{$data[view]}"></td>
+            </tr>
+            <tr>
+              <td>排序优先级</td>
+            </tr>
+            <tr>
+              <td><input type="text" name="level" class="input-1" value="{$data[level]}"></td>
+            </tr>
+            <tr>
+              <td>评论数</td>
+            </tr>
+            <tr>
+              <td><input type="text" name="comment" class="input-1" value="{$data[comment]}"></td>
+            </tr>
+          </table></td>
+      </tr>
+    </table>
+    <div class="buttons">
+      <button class="btn submit-btn ajax-post" type="submit" target-form="form-horizontal">确定</button>
+      <a class="btn btn-return" href="{$Think.cookie.__forward__}">返回</a>
+      <if condition="C('OPEN_DRAFTBOX') and (ACTION_NAME eq 'add' or $data['status'] eq 3)">
+        <button class="btn save-btn" url="{:U('article/autoSave')}" target-form="form-horizontal" id="autoSave">存草稿</button>
+      </if>
+      <input type="hidden" name="id" value="{$info.id|default=''}"/>
+      <input type="hidden" name="pid" value="{$info.pid|default=''}"/>
+      <input type="hidden" name="model_id" value="{$info.model_id|default=''}"/>
+      <input type="hidden" name="category_id" value="{$info.category_id|default=''}">
+    </div>
+  </form>
+</div>
+</block>
+<block name="script"> 
+  <script type="text/javascript" charset="utf-8" src="__PUBLIC__/js/ext/webuploader/js/webuploader.js"></script> 
+  <script type="text/javascript">
+
+Calendar.setup({
+			weekNumbers: true,
+		    inputField : "time-end",
+		    trigger    : "time-end",
+		    dateFormat: "%Y-%m-%d %H:%M",
+		    showTime: true,
+		    minuteStep: 1,
+		    onSelect   : function() {this.hide();}
+	});
+	Calendar.setup({
+			weekNumbers: true,
+		    inputField : "time-start",
+		    trigger    : "time-start",
+		    dateFormat: "%Y-%m-%d %H:%M",
+		    showTime: true,
+		    minuteStep: 1,
+		    onSelect   : function() {this.hide();}
+});
+</script> 
+</block>

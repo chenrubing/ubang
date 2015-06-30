@@ -1,0 +1,110 @@
+<script type="text/javascript" src="__STATIC__/uploadify/jquery.uploadify.min.js"></script>
+<script type="text/javascript" src="__JS__/button.js"></script>
+<style> 
+.btn-group .btn{ margin:8px; padding:8px}
+/*进度条*/
+.uploadify-queue-item{position:fixed;top:51px;right:10px;z-index:99999999;background-color:#eee;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;width:400px;padding:10px}
+.uploadify-error{background-color:#fde5dd!important}
+.uploadify-queue-item .cancel a{float:right;height:16px;text-indent:-9999px;width:16px}
+.uploadify-queue-item.completed{background-color:#e5e5e5}
+.uploadify-progress{background-color:#e5e5e5;margin-top:10px;width:100%}
+.uploadify-progress-bar{background-color:#09f;height:3px;width:1px}
+.uploadify-queue-item .cancel a{background:url(../img/icon/uploadify-cancel.png) 0 0 no-repeat;float:right;height:16px;text-indent:-9999px;width:16px}
+.upload-box{margin-top:8px;border:1px solid #eee;height:242px; margin-bottom:10px; padding-top:5px }
+.upload-box  li.btn{ position:relative; width:98px }
+.upload-box  li.btn.active i{background:url(__IMG__/right-icon.png) no-repeat; position:absolute; z-index:999; display:block; width:43px; height:40px; bottom:4px; right:4px ; display:block}
+.upload-box  li.btn i{ display:none }
+.card > img{ height:80px; width:80px}
+</style>
+
+
+    <ul class="nav nav-secondary">
+      <li class="active"><a href="#upfile" data-toggle="tab">本地上传</a></li>
+      <li><a href="#history" data-toggle="tab">最近上传</a></li>
+    </ul>
+
+  <div class="tab-content" style="min-height:300px"> 
+    <!--选项卡内容开始-->
+    <div class="tab-pane active" id="upfile">
+      <div style="margin:10px 0px"><span id="FlashBtn"></span></div>
+      <div class="upload-box">
+        <ul class="clearfix btn-group" id="InHtml" data-toggle="buttons">
+        </ul>
+      </div>
+    </div>
+    <div class="tab-pane" id="history">
+       <div class="upload-box">
+      <ul class="clearfix btn-group" id="history-box" data-toggle="buttons">
+        <volist name="list" id="vo">
+          <li class="btn card"><img  src="__ROOT__{$vo.path}" width="80" height="80" url="{$vo.id}" title="{$vo.name}" />
+          <span class="caption">{$vo.name}</span>
+          <i></i>
+            <input type="<if condition='$_GET[num] eq 1'>radio<else/>checkbox</if>" class="hide">
+          </li>
+        </volist>
+      </ul>
+      </div>
+    </div>
+  </div><div class="modal-ajax-footer">
+<button type="submit" class="btn" id="okbtn">确定</button></div>
+
+<script type="text/javascript">	
+$(document).ready(function(){
+ setTimeout(function(){
+	var i=0;
+	
+	$("#FlashBtn").uploadify({
+		"swf"             : "__STATIC__/uploadify/uploadify.swf",
+		"fileObjName"     : "download",
+ 		"buttonText"      : "点击上传图片",
+		'multi' :true,
+		"uploader"        : "{:U('File/uploadPicture',array('session_id'=>session_id()))}",	  
+		'fileTypeExts'	  : '{$exts}',
+		"onUploadSuccess" : uploadPicture,
+		'onFallback' : function() {
+		    alert('未检测到兼容版本的Flash.');
+		}
+	});
+		function uploadPicture(file, data){
+		i++;
+		var data = $.parseJSON(data);
+		if(data.status){
+			$('#InHtml').append('<li class="btn"><img src="' +  data.path + '" width="80" height="80"  url="'+ data.id +'" title="'+ data.name +'"/><i></i> <input type="<if condition='$_GET[num] eq 1'>radio<else/>checkbox</if>" class="hide"></li>');
+			//让第一个上传的为选中状态
+			if(i==1){
+				$('#InHtml .btn').addClass('active');
+			}	 	
+		}
+	}
+ },10);//延时避免uploadify导致chrome崩溃
+})
+
+
+
+$("#okbtn").click(function(){
+	//获取选中的图片id和图片路径 
+var arr = new Array();
+  			$('.btn.active img').each(function() {
+				arr.push({url:$(this).attr('url'),title:$(this).attr('title'),src:$(this).attr('src')});
+  			});   
+			if(!arr[0]){ 
+				updateAlert('请选择一个图片', 'error');
+				return false;
+			}else{
+				
+			if(arr){
+	   			 $.each(arr, function(key,val) { 
+				if({$_GET[num]}==1){
+					$('#{$_GET[name]}_input').val(val.url);
+					$('#{$_GET[name]}_view').attr('src',val.src+'?'+Math.random()+'');
+				}else{
+					$('#{$_GET[name]}_html').append('<li>描述： <input type="text" name="{$_GET[name]}[title][]" value="'+val.title.split('.')[0]+'"  placeholder="图片描述，可留空">  图片ID/地址：<input type="text" name="{$_GET[name]}[url][]" value="'+val.url+'"  placeholder="图片ID或外部地址">   <a class="btn" href="'+val.src+'" target="_blank"><i class="glyphicon glyphicon-save"></i></a> <button  type="button" class="btn delete_input" ><i class="glyphicon glyphicon-trash"></i></button> <button  type="button" class="btn li_move" title="点击拖动排序" ><i class="glyphicon glyphicon-sort"></i></button></li> ');
+				}
+				
+         	}); 
+				
+			}
+		$('#triggerModal').modal('toggle', 'false')
+	}
+});	
+</script> 

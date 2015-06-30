@@ -1,0 +1,28 @@
+<extend name="Base/common"/>
+<block name="body">
+<div class="am-container am-margin-top">
+<empty name="userorder">
+<div class="am-alert am-alert-warning" data-am-alert>
+  <button type="button" class="am-close">&times;</button>
+  还没有代理订单</div>
+<else/>
+<table width="100%" border="0" class="am-table am-table-bordered am-table-striped  shoptable">
+<tr>
+  <th width="47%" style="text-align:center">销售者</th>
+  <th width="27%" style="text-align:center">销售日期</th>
+  <th width="26%" style="text-align:center">订单金额</th>
+</tr>
+
+   <volist name="userorder" id="vo">
+  <tr>
+    <td>{:get_nickname(get_Usertree($vo[uid]))}</td>
+    <td>{$vo.create_time|date="Y-m-d",###}</td>
+    <td>{$vo.realprice}</td>
+  </tr>
+  </volist>
+
+
+</table>
+</empty>
+</div>
+</block>

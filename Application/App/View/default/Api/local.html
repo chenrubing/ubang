@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<script src="__Public__/js/jquery-1.10.2.min.js"></script>
+<style>
+a{ text-decoration:none; color:#000;}
+.ulli{ list-style-type:none; padding:0px; margin:0px; clear:both; line-height:25px;}
+.ulli li{ float:left; line-height:23px; height:23px; border:1px solid #FFF;}
+.zi a{color:#090;}
+select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;}
+</style>
+</head>
+
+<body>
+
+<span></span>
+<form action="" method="get">
+	商家：<select class="bid" name="bid">
+			<volist name="listke" id="vo">
+                <option value="{$vo.uid}">{$vo.nickname}</option>
+            </volist>
+		  </select><br/>
+		  <input name="plan_id" type="hidden" value="{:I('id')}">
+    评价：<input name="star" type="hidden" value="">	<ul class="ulli">
+                <li class="zi"><a href="javascript:void(0)">❤</a></li>
+                <li><a href="javascript:void(0)">❤</a></li>
+                <li><a href="javascript:void(0)">❤</a></li>
+                <li><a href="javascript:void(0)">❤</a></li>
+                <li><a href="javascript:void(0)">❤</a></li><span  class="xin">1</span>星
+            </ul>
+     评论内容：<textarea class="content" name="content" cols="20" rows="5"></textarea><br/>
+     <input class="buts" value="提交" name="" type="button" />
+    	
+</form>
+<script type="text/javascript">
+	$(function(){
+		$(".ulli li").hover(function(){
+			var a=$(".ulli li").index(this);
+			var b=a+1;
+			$(".xin").text(b);
+			$("input[name='star']").val(a);
+			$(this).prevAll("li").add(this).addClass("zi");
+			$(this).nextAll("li").removeClass("zi");
+		},function(){
+			
+		});
+
+		
+		$(".buts").click(function(e) {
+		var bid=$(".bid option:selected").val();
+		var star=$("input[name='star']").val();
+		var content=$(".content").val();
+		var plan_id=$("input[name='plan_id']").val();
+            $.ajax({
+			   type: "POST",
+			   url: "index.php?s=/App/Api/local",
+			   data: "bid="+bid+"&star="+star+"&content="+content+"&plan_id="+plan_id,
+			   success: function(msg){
+				   if(msg['status']=="1")
+				   {
+					  alert(msg['msg']);
+				   }
+				   else
+				   {
+				   	  alert(msg['info']);
+				   }
+			   },
+			});
+        });
+
+
+	})
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!-- 管理员用户组新增和编辑页面 -->
+
+<extend name="Public/base" />
+<block name="body">
+  <div class="main-title">
+    <h2>角色用户注册时要填写的扩展资料字段配置</h2>
+  </div>
+  <div class="tab-wrap">
+    <div class="clearfix  with-padding">
+      <div class="pull-left"> <include file="_link"/> </div>
+      <div class="pull-right">
+        <select name="role" class="form-control">
+          <volist name="role_list" id="vo"> <option value="{:U('Role/configScore',array('id'=>$vo['id']))}"   
+            
+            <eq name="vo['id']" value="$this_role['id']">selected</eq>
+            >{$vo.title} 
+            
+            </option>
+          </volist>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="with-padding">
+    <form action="__SELF__" enctype="application/x-www-form-urlencoded" method="POST" class="form-horizontal">
+      <table class="table table-bordered table-hover" width="100%">
+        <notempty name="field_list">
+          <volist name="field_list" id="group" >
+            <tr>
+              <td width="24%"> {$group.profile_name}</td>
+              <td width="1%" class="all"><label class="checkbox ">
+                  <input class="auth_fields fields_all" type="checkbox">
+                </label></td>
+              <td width="75%"><present name="group['field_list']">
+                  <volist name="group['field_list']" id="field" >
+                    <label class="checkbox" title="id：{$field['id']}  字段类型：{$field['form_type']}">
+                      <input class="auth_fields fields_row" type="checkbox" name="fields[]" value="{$field.id}"/>
+                      {$field.field_name}</label>
+                  </volist>
+                </present></td>
+            </tr>
+          </volist>
+          <else/>
+          <tr>
+            <td colspan="3"><div class="alert  alert-warning"> 请先设置角色用户拥有的扩展资料字段</div></td>
+          </tr>
+        </notempty>
+      </table>
+      <div class="buttons">
+      <input type="hidden" name="id" value="{$this_role.id}" />
+      <button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button></div>
+    </form>
+  </div>
+  
+</block>
+<block name="script"> 
+
+  <script type="text/javascript" charset="utf-8">
+        +function($){
+            var fields = [{$this_role.fields}];
+        $('.auth_fields').each(function(){
+            if( $.inArray( parseInt(this.value,10),fields )>-1 ){
+                $(this).prop('checked',true);
+            }
+            if(this.value==''){
+                $(this).closest('span').remove();
+            }
+        });
+
+        //全选节点
+        $('.fields_all').on('change',function(){
+            $(this).closest('dl').find('dd').find('input').prop('checked',this.checked);
+        });
+       
+
+      
+
+        $('select[name="role"]').change(function(){
+            location.href = this.value;
+        });
+        //导航高亮
+        highlight_subnav('{:U('Role/configfield')}');
+        }(jQuery);
+    </script> 
+</block>

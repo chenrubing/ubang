@@ -1,0 +1,1 @@
+<?php if (!defined('THINK_PATH')) exit();?>Service/case_edit?id=175

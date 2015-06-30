@@ -1,0 +1,66 @@
+<extend name="Public/base"/>
+<block name="body">
+  
+  <!-- 数据列表 -->
+  
+  <div class="main-title">
+    <h2>模型列表</h2>
+  </div>
+  <div class="with-padding"><a data-remote="{:U('Model/add')}" data-toggle="modal" class="btn" href="javascript:void(0);" data-title="新增模型">新增</a> <span class="btn-group">
+    <button class="btn ajax-post" target-form="ids" url="{:U('Model/setStatus',array('status'=>1))}">启用</button>
+    <button class="btn ajax-post" target-form="ids" url="{:U('Model/setStatus',array('status'=>0))}">禁用</button>
+    </span></div>
+  <div class="data-table with-padding">
+    <table width="100%" class="table table-hover table-bordered  table-striped " cellpadding="0"  cellspacing="0">
+      <thead>
+        <tr>
+          <th width="5%" class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+          <th width="6%">编号</th>
+          <th width="8%">标识</th>
+          <th width="28%">名称</th>
+          <th width="17%">创建时间</th>
+          <th width="12%">状态</th>
+          <th width="24%">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="_list">
+          <volist name="_list" id="vo">
+            <tr class="center">
+              <td><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}" /></td>
+              <td>{$vo.id} </td>
+              <td>{$vo.name}</td>
+              <td><a data-id="{$vo.id}" href="{:U('model/edit?id='.$vo['id'])}">{$vo.title}</a></td>
+              <td><span>{$vo.create_time|time_format}</span></td>
+              <td>{$vo.status_text} <a href="{:U('model/setstatus?ids='.$vo['id'].'&status='.abs(1-$vo['status']))}" class="ajax-get">[{$vo.status|show_status_op}]</a></td>
+              <td> <a  href="{:U('model/edit?id='.$vo['id'])}" data-title="编辑模型">[编辑模型]</a> <a  href="{:U('Attribute/index?model_id='.$vo['id'])}" data-title="编辑模型">[字段管理]</a> <a href="{:U('model/del?ids='.$vo['id'])}" class="confirm ajax-get">[删除]</a></td>
+            </tr>
+          </volist>
+          <else/>
+          <tr>
+            <td colspan="6" class="text-center"> aOh! 暂时还没有内容! </td>
+          </tr>
+        </notempty>
+      </tbody>
+    </table>
+    {$_page} </div>
+</block>
+<block name="script">
+  <script src="__STATIC__/thinkbox/jquery.thinkbox.js"></script>
+  <script type="text/javascript">
+    $(function(){
+    	$("#search").click(function(){
+    		var url = $(this).attr('url');
+    		var status = $('select[name=status]').val();
+    		var search = $('input[name=search]').val();
+    		if(status != ''){
+    			url += '/status/' + status;
+    		}
+    		if(search != ''){
+    			url += '/search/' + search;
+    		}
+    		window.location.href = url;
+    	});
+})
+</script>
+</block>

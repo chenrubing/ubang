@@ -1,0 +1,49 @@
+<extend name="Base/common"/>
+
+<block name="body">
+
+
+<div data-am-widget="slider" class="am-slider am-slider-c2" data-am-slider='{&quot;directionNav&quot;:false}'>
+  <ul class="am-slides">
+
+  <volist name="dlis" id="vo">
+    <li>
+      <img src="{$vo.cover_id|get_cover='path'}" />
+      <div class="am-slider-desc">{$vo.title}</div>
+    </li>
+  </volist>
+  </ul>
+</div>
+
+<div data-am-widget="list_news" class="am-list-news am-list-news-default">
+  <!--列表标题-->
+  <div class="am-list-news-bd ul-lie">
+    <ul class="am-list">
+      <!--缩略图在标题左边-->
+
+      <volist name="category" id="data">
+      <li class="am-g am-list-item-desced am-list-item-thumbed am-list-item-thumb-left">
+        <div class="am-u-sm-4 am-list-thumb">
+            <a href="{:U('cms/article/lists',array('category'=>$data['id']))}" class="">
+              <img src="{$data.cover_id|get_cover='path'}" alt="{$data.title}"    />
+            </a>
+          </div>
+          <div class=" am-u-sm-8 am-list-main">
+            <h3 class="title-li">
+              <a href="{:U('cms/article/article',array('id'=>$data['id']))}" class="">{$data.title}</a>
+            </h3>
+            <div class="div-jie">
+            <span class="am-list">{:msubstr($data[description],0,35) } <span class=" span-you">{$data.comment}评论</span></span>
+            </div>
+          </div>
+        </li>
+      </volist>
+      
+    </ul>
+  </div>
+  <div>{$pages}</div>
+</div>
+
+
+
+</block>

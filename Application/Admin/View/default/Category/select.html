@@ -1,0 +1,59 @@
+<ul id="editTree" class="ztree" style="min-height:300px"></ul>
+ <div class="modal-ajax-footer">
+ 	<input type="hidden" id="tmp_id" /><input  type="hidden" id="tmp_title" />
+    <button class="btn" onclick="$('#CategoryName').html('<i class=icon-chevron-down></i>' + $('#tmp_title').val()); $('#CategoryPid').val($('#tmp_id').val());$('#triggerModal').modal('toggle', 'false');">确定</button>
+    <button class="btn" data-dismiss="modal">关闭</button>
+    </div>
+<script type="text/javascript">
+		var setting = { 
+			async: {
+				enable: true,
+				url: "{:U('GetTree')}",
+				autoParam: ["id", "name=n", "level=lv"],
+				otherParam: {"otherParam": "zTreeAsyncTest"},
+				type: "get"
+			},
+			view: {
+				dblClickExpand: false,
+			},
+			callback: {
+				onClick: onClick
+			}
+		};
+	
+		function onClick(e,treeId, treeNode) {
+			var zTree = $.fn.zTree.getZTreeObj("editTree");
+			zTree.expandNode(treeNode);
+		}
+
+		function onAsyncError(event, treeId, treeNode, XMLHttpRequest, textStatus, errorThrown) {
+			curAsyncCount--;
+			if (curAsyncCount <= 0) {
+				curStatus = "";
+				if (treeNode!=null) asyncForAll = true;
+			}
+		}
+		
+		function onClick(e, treeId, treeNode) {
+			var zTree = $.fn.zTree.getZTreeObj("editTree"),
+			nodes = zTree.getSelectedNodes(),
+			n = "";
+			id = "";
+			nodes.sort(function compare(a,b){return a.id-b.id;});
+			for (var i=0, l=nodes.length; i<l; i++) {
+				n += nodes[i].name + ",";
+				id += nodes[i].id + ",";
+			}
+			if (n.length > 0 ) n = n.substring(0, n.length-1);
+			if (id.length > 0 ) id = id.substring(0, id.length-1);
+			var NameObj = $("#tmp_title");
+			var PidObj = $("#tmp_id");
+			NameObj.val(n);
+			PidObj.val(id);	
+		}
+
+		$(document).ready(function() {
+			$.fn.zTree.init($("#editTree"), setting);
+			
+		});
+	</script> 

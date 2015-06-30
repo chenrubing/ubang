@@ -1,0 +1,31 @@
+<block name="body">
+    <form id="form" method="post" class="form-horizontal doc-modal-form">
+      <table border="0" cellspacing="0"  width="100%"  class="table  table-bordered ">
+        <tr>
+          <td width="29%">行为名称</td>
+          <td width="71%">{:get_action($info['action_id'], "title")}</td>
+        </tr>
+        <tr>
+          <td> 执行者 </td>
+          <td>{:get_nickname($info['user_id'])}</td>
+        </tr>
+        <tr>
+          <td> 执行IP </td>
+          <td>{:long2ip($info['action_ip'])}</td>
+        </tr>
+        <tr>
+          <td> 执行时间 </td>
+          <td>{:date('Y-m-d H:i:s',$info['create_time'])}</td>
+        </tr>
+        <tr>
+          <td>备注</td>
+          <td><textarea class="input-5" readonly="readonly">{$info.remark}</textarea></td>
+        </tr>
+      </table>
+
+   <div class="modal-ajax-footer">
+    <button class="btn" data-dismiss="modal">关闭</button>
+    </div>
+    </form>
+
+</block>
